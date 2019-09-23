@@ -1,0 +1,15 @@
+example.A:
+  fqn: 'tests.resources.class_a.A'
+
+example.B:
+  fqn: 'tests.resources.class_b.B'
+  args:
+    - '@example.A'
+
+example.C:
+  fqn: 'tests.resources.class_c.C'
+  args:
+    - '@example.A'
+  kwargs:
+    kw_arg: 'test_param'
+    b: '@example.B'

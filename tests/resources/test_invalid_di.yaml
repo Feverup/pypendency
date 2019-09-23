@@ -1,0 +1,6 @@
+example.A:
+      fqn:
+  example.B:
+  fqn:
+  args:
+    - '@example.A'
