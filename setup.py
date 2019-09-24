@@ -5,9 +5,6 @@ from setuptools import setup, find_packages
 with open('README.md', 'r') as readme:
     README = readme.read()
 
-with open('VERSION', 'r') as version:
-    VERSION = version.read().strip()
-
 
 def _get_install_requires() -> List[str]:
     requirements = ['pyyaml']
@@ -19,7 +16,7 @@ def _get_install_requires() -> List[str]:
 
 setup(
     name='pypendency',
-    version=VERSION,
+    version='0.0.2',
     packages=find_packages('src'),
     package_dir={'': 'src'},
     author='Marcos Hernandez Juarez',
