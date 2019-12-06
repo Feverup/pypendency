@@ -4,6 +4,7 @@ from unittest.mock import Mock
 from pypendency.builder import ContainerBuilder
 from pypendency.loaders import exceptions
 from pypendency.loaders.yaml_loader import YamlLoader
+from tests.resources.class_a import A
 from tests.resources.class_c import C
 
 
@@ -31,3 +32,9 @@ class TestYamlLoader(TestCase):
             self._container_builder.get("example.C"),
             C
         )
+
+    def test_load_dir(self):
+        self.loader.load_dir("tests/resources/loaders")
+        self.assertIsInstance(self._container_builder.get("same_level_file"), A)
+        self.assertIsInstance(self._container_builder.get("one_level_file"), A)
+        self.assertIsInstance(self._container_builder.get("two_levels_file"), A)
