@@ -27,3 +27,9 @@ class TestPyLoader(TestCase):
         self.assertIsInstance(c, C)
         self.assertIsInstance(c.b, B)
         self.assertIsInstance(c.a, A)
+
+    def test_load_dir(self):
+        self.loader.load_dir("tests/resources/loaders")
+        self.assertIsInstance(self._container_builder.get("same_level_file"), A)
+        self.assertIsInstance(self._container_builder.get("one_level_file"), A)
+        self.assertIsInstance(self._container_builder.get("two_levels_file"), A)

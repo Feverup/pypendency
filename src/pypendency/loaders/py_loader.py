@@ -1,3 +1,4 @@
+import glob
 from pydoc import locate
 
 from pypendency.builder import ContainerBuilder
@@ -19,3 +20,8 @@ class PyLoader(Loader):
             package.load(self.__container_builder)
         except AttributeError as e:
             raise exceptions.MissingLoaderMethod(resource) from e
+
+    def load_dir(self, directory: str) -> None:
+        for file in glob.glob(f"{directory}/**/*.*", recursive=True):
+            if file.endswith(".py") and not file.startswith("_"):
+                self.load(file[:-3].replace("/", "."))
