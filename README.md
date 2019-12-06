@@ -9,8 +9,8 @@ pip install pypendency
 ## Usage
 Pypendency supports:
 * Declaration of explicit dependencies for each registered service.
-* Lazy evaluation (dependencies are not evaluated and instantiated until are required)
-* Loading dependencies from different sources, such as python file or yaml file. 
+* Lazy evaluation (dependencies are not evaluated and instantiated until they are required)
+* Loading dependencies from different sources, such as python file, yaml file or directories. 
 Also, it can be done programmatically.
 
 #### Examples
@@ -23,13 +23,19 @@ from pypendency.definition import Definition
 from pypendency.loaders.yaml_loader import YamlLoader
 from pypendency.loaders.py_loader import PyLoader
 
+# Manually
 container_builder.set('random_object', object())
 container_builder.set_definition(
     Definition('another_random_object', 'builtins.object')
 )
 
+# File by file
 YamlLoader(container_builder).load('path_to_yaml/example_di.yaml')
 PyLoader(container_builder).load('python.file.namespace.example_di')
+
+# Specifying a directory
+YamlLoader(container_builder).load_dir('path_to_yaml')
+PyLoader(container_builder).load_dir('python/file/namespace/')
 ```
 
 ```yaml
