@@ -22,6 +22,5 @@ class PyLoader(Loader):
             raise exceptions.MissingLoaderMethod(resource) from e
 
     def load_dir(self, directory: str) -> None:
-        for file in glob.glob(f"{directory}/**/*.*", recursive=True):
-            if file.endswith(".py") and not file.startswith("_"):
-                self.load(file[:-3].replace("/", "."))
+        for file in glob.glob(f"{directory}/**/[!_]*.py", recursive=True):
+            self.load(file[:-3].replace("/", "."))
