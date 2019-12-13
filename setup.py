@@ -16,7 +16,7 @@ def _get_install_requires() -> List[str]:
 
 setup(
     name='pypendency',
-    version='0.0.2',
+    version='0.0.3',
     packages=find_packages('src'),
     package_dir={'': 'src'},
     author='Marcos Hernandez Juarez',

@@ -1,0 +1,2 @@
+two_levels_file:
+  fqn: 'tests.resources.class_a.A'

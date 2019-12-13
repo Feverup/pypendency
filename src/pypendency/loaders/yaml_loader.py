@@ -1,3 +1,5 @@
+import glob
+
 import yaml
 
 from pypendency.argument import Argument
@@ -41,3 +43,10 @@ class YamlLoader(Loader):
     def __resource_loaded(self, resource: str) -> dict:
         with open(resource, 'r') as stream:
             return yaml.safe_load(stream)
+
+    def load_dir(self, directory: str) -> None:
+        files = glob.glob(f'{directory}/**/[!_]*.yml', recursive=True)
+        files.extend(glob.glob(f'{directory}/**/[!_]*.yaml', recursive=True))
+
+        for file in files:
+            self.load(file)
