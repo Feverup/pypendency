@@ -1,2 +1,2 @@
-should_not_exists:
+should_not_exist:
   fqn: 'tests.resources.class_a.A'

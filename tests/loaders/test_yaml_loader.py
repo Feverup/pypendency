@@ -41,6 +41,6 @@ class TestYamlLoader(TestCase):
         self.assertIsInstance(self._container_builder.get("two_levels_file"), A)
 
         with self.assertRaises(ServiceNotFoundInContainer):
-            self._container_builder.get("should_not_exists")
+            self._container_builder.get("should_not_exist")
 
 
