@@ -45,8 +45,8 @@ class YamlLoader(Loader):
             return yaml.safe_load(stream)
 
     def load_dir(self, directory: str) -> None:
-        for file in glob.glob(f'{directory}/**/[!_]*.y*ml', recursive=True):
-            if not file.endswith(".yaml") and not file.endswith(".yml"):
-                continue
+        files = glob.glob(f'{directory}/**/[!_]*.yml', recursive=True)
+        files.extend(glob.glob(f'{directory}/**/[!_]*.yaml', recursive=True))
 
+        for file in files:
             self.load(file)
