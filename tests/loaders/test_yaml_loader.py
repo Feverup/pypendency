@@ -2,6 +2,7 @@ from unittest import TestCase
 from unittest.mock import Mock
 
 from pypendency.builder import ContainerBuilder
+from pypendency.exceptions import ServiceNotFoundInContainer
 from pypendency.loaders import exceptions
 from pypendency.loaders.yaml_loader import YamlLoader
 from tests.resources.class_a import A
@@ -38,3 +39,8 @@ class TestYamlLoader(TestCase):
         self.assertIsInstance(self._container_builder.get("same_level_file"), A)
         self.assertIsInstance(self._container_builder.get("one_level_file"), A)
         self.assertIsInstance(self._container_builder.get("two_levels_file"), A)
+
+        with self.assertRaises(ServiceNotFoundInContainer):
+            self._container_builder.get("should_not_exists")
+
+
