@@ -6,7 +6,7 @@ with open('README.md', 'r') as readme:
 
 setup(
     name='pypendency',
-    version='0.0.4-beta.1',
+    version='0.0.4',
     packages=find_packages('src'),
     package_dir={'': 'src'},
     author='Marcos Hernandez Juarez',
@@ -30,7 +30,7 @@ setup(
     python_requires='>=3.6',
     install_requires=[
         'pyyaml',
-        '"dataclasses ; python_version < "3.7.0"',
+        'dataclasses;python_version<"3.7.0"',
     ],
     include_package_data=True,
 )
