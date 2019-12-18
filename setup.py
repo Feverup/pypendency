@@ -1,26 +1,16 @@
-import sys
-from typing import List
 from setuptools import setup, find_packages
 
 with open('README.md', 'r') as readme:
     README = readme.read()
 
 
-def _get_install_requires() -> List[str]:
-    requirements = ['pyyaml']
-    if sys.version_info < (3, 7):
-        requirements.append('dataclasses')
-
-    return requirements
-
-
 setup(
     name='pypendency',
-    version='0.0.3',
+    version='0.0.4',
     packages=find_packages('src'),
     package_dir={'': 'src'},
     author='Marcos Hernandez Juarez',
-    author_email='marcos.hernandez@feverup.com',
+    author_email='marcos.hernandezjuarez@gmail.com',
     description='A dependency injection tool for python',
     long_description=README,
     long_description_content_type='text/markdown',
@@ -38,6 +28,9 @@ setup(
         'Typing :: Typed',
     ],
     python_requires='>=3.6',
-    install_requires=_get_install_requires(),
+    install_requires=[
+        'pyyaml',
+        'dataclasses;python_version<"3.7.0"',
+    ],
     include_package_data=True,
 )

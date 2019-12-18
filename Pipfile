@@ -6,7 +6,7 @@ verify_ssl = true
 [dev-packages]
 
 [packages]
-dataclasses = "*"
+dataclasses = {version = "*", markers="python_version < '3.7.0'"}
 pyyaml = "*"
 
 [requires]
