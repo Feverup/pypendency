@@ -6,7 +6,7 @@ with open('README.md', 'r') as readme:
 
 setup(
     name='pypendency',
-    version='0.0.4',
+    version='0.0.5',
     packages=find_packages('src'),
     package_dir={'': 'src'},
     author='Marcos Hernandez Juarez',
