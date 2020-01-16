@@ -15,6 +15,7 @@ class PyLoader(Loader):
         self.__container_builder = container_builder
 
     def load(self, resource: str) -> None:
+        self.guard_path_is_absolute(resource)
         spec = spec_from_file_location(self.DEFAULT_TEMPORAL_LOAD_MODULE_NAME, resource)
 
         if spec is None:
@@ -39,5 +40,6 @@ class PyLoader(Loader):
             raise exceptions.MissingLoaderMethod(resource) from e
 
     def load_dir(self, directory: str) -> None:
+        self.guard_path_is_absolute(directory)
         for file in glob.glob(f"{directory}/**/[!_]*.py", recursive=True):
             self.load(file)
