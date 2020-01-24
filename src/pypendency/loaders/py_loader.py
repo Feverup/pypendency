@@ -16,6 +16,9 @@ class PyLoader(Loader):
 
     def load(self, resource: str) -> None:
         self.guard_path_is_absolute(resource)
+        self.__load_by_absolute_path(resource)
+
+    def __load_by_absolute_path(self, resource: str) -> None:
         spec = spec_from_file_location(self.DEFAULT_TEMPORAL_LOAD_MODULE_NAME, resource)
 
         if spec is None:
@@ -42,4 +45,4 @@ class PyLoader(Loader):
     def load_dir(self, directory: str) -> None:
         self.guard_path_is_absolute(directory)
         for file in glob.glob(f"{directory}/**/[!_]*.py", recursive=True):
-            self.load(file)
+            self.__load_by_absolute_path(file)
