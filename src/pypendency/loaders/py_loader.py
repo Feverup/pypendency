@@ -21,14 +21,14 @@ class PyLoader(Loader):
     def __load_by_absolute_path(self, resource: str) -> None:
         spec = spec_from_file_location(self.DEFAULT_TEMPORAL_LOAD_MODULE_NAME, resource)
 
-        if spec is None:
+        if spec is None or spec.loader is None:
             raise exceptions.ResourceNotFound(resource)
 
         module = module_from_spec(spec)
         spec.loader.exec_module(module)
-        self.load_module(resource, module)
+        self.__load_module(resource, module)
 
-    def load_module(self, resource: str, module: PythonLoadableModuleType) -> None:
+    def __load_module(self, resource: str, module: PythonLoadableModuleType) -> None:
         try:
             module.load(self.__container_builder)
         except AttributeError as e:
@@ -40,7 +40,7 @@ class PyLoader(Loader):
         if package is None:
             raise exceptions.ResourceNotFound(resource)
 
-        self.load_module(resource, package)
+        self.__load_module(resource, package)
 
     def load_dir(self, directory: str) -> None:
         self._guard_path_is_absolute(directory)

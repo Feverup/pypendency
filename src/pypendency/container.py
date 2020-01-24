@@ -64,7 +64,6 @@ class Container(AbstractContainer):
         definition = service
         args, kwargs = [], {}
         for argument in definition.arguments:
-            argument: Argument = argument
             value = self.__get_argument_value(argument)
             if argument.key is None:
                 args.append(value)
