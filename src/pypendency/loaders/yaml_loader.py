@@ -15,6 +15,9 @@ class YamlLoader(Loader):
 
     def load(self, resource: str) -> None:
         self._guard_path_is_absolute(resource)
+        self.__load_by_absolute_path(resource)
+
+    def __load_by_absolute_path(self, resource: str) -> None:
         try:
             resource_loaded: dict = self.__resource_loaded(resource) or {}
         except FileNotFoundError as e:
@@ -51,4 +54,4 @@ class YamlLoader(Loader):
         files.extend(glob.glob(f'{directory}/**/[!_]*.yaml', recursive=True))
 
         for file in files:
-            self.load(file)
+            self.__load_by_absolute_path(file)
