@@ -25,6 +25,12 @@ class PyLoader(Loader):
         spec.loader.exec_module(module)
         self.load_module(resource, module)
 
+    def load_module(self, resource: str, module: PythonLoadableModuleType) -> None:
+        try:
+            module.load(self.__container_builder)
+        except AttributeError as e:
+            raise exceptions.MissingLoaderMethod(resource) from e
+
     def load_by_module_name(self, resource: str) -> None:
         package = locate(resource)
 
@@ -32,12 +38,6 @@ class PyLoader(Loader):
             raise exceptions.ResourceNotFound(resource)
 
         self.load_module(resource, package)
-
-    def load_module(self, resource: str, module: PythonLoadableModuleType) -> None:
-        try:
-            module.load(self.__container_builder)
-        except AttributeError as e:
-            raise exceptions.MissingLoaderMethod(resource) from e
 
     def load_dir(self, directory: str) -> None:
         self.guard_path_is_absolute(directory)
