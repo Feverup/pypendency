@@ -15,7 +15,7 @@ class PyLoader(Loader):
         self.__container_builder = container_builder
 
     def load(self, resource: str) -> None:
-        self.guard_path_is_absolute(resource)
+        self._guard_path_is_absolute(resource)
         self.__load_by_absolute_path(resource)
 
     def __load_by_absolute_path(self, resource: str) -> None:
@@ -43,6 +43,6 @@ class PyLoader(Loader):
         self.load_module(resource, package)
 
     def load_dir(self, directory: str) -> None:
-        self.guard_path_is_absolute(directory)
+        self._guard_path_is_absolute(directory)
         for file in glob.glob(f"{directory}/**/[!_]*.py", recursive=True):
             self.__load_by_absolute_path(file)
