@@ -5,7 +5,7 @@ from pydoc import locate
 from pypendency.builder import ContainerBuilder
 from pypendency.loaders import exceptions
 from pypendency.loaders.loader import Loader
-from pypendency.python_loadable_module_type import PythonLoadableModuleType
+from pypendency.types.python_loadable_module import PythonLoadableModuleType
 
 
 class PyLoader(Loader):
