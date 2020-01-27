@@ -23,3 +23,11 @@ class MissingLoaderMethod(ContainerLoaderError):
         super().__init__(
             f"Resource {str(resource)} requires loader method"
         )
+
+
+class PathNotAbsolute(Exception):
+    def __init__(self, path: str):
+        self.path = path
+        super().__init__(
+            f"Path is not absolute: {path}"
+        )
