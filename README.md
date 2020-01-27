@@ -30,12 +30,13 @@ container_builder.set_definition(
 )
 
 # File by file
-YamlLoader(container_builder).load('path_to_yaml/example_di.yaml')
-PyLoader(container_builder).load('python.file.namespace.example_di')
+YamlLoader(container_builder).load('/absolute/path/to/yaml/example.yaml')
+PyLoader(container_builder).load('/absolute/path/to/python_file/example.py')
+PyLoader(container_builder).load_by_module_name('python_file.example')
 
 # Specifying a directory
-YamlLoader(container_builder).load_dir('path_to_yaml')
-PyLoader(container_builder).load_dir('python/file/namespace/')
+YamlLoader(container_builder).load_dir('/absolute/path/to/yaml/')
+PyLoader(container_builder).load_dir('/absolute/path/to/python_file/')
 ```
 
 ```yaml
