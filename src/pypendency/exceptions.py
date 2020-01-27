@@ -30,3 +30,9 @@ class ServiceNotFoundFromFullyQualifiedName(Exception):
         super().__init__(
             f"Container can't locate any class in {fully_qualified_name}"
         )
+
+
+class ServiceInstantiationFailed(Exception):
+    def __init__(self, service_fqn: str) -> None:
+        self.service_fqn = service_fqn
+        super().__init__(f"Type {service_fqn} cannot be instantiated by the container")

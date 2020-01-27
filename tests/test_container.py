@@ -91,6 +91,37 @@ class TestContainer(TestCase):
         with self.assertRaises(exceptions.ServiceNotFoundFromFullyQualifiedName):
             container.get("example.B")
 
+    def test_get_with_missing_parameters_for_instantiation(self):
+        container = Container([
+            Definition(
+                "example.C",
+                "tests.resources.class_c.C"
+            ),
+        ])
+
+        with self.assertRaises(
+            exceptions.ServiceInstantiationFailed,
+            "Type tests.resources.class_c.C cannot be instantiated by the container"
+        ):
+            container.get("example.C")
+
+    def test_get_with_more_parameters_than_expected(self):
+        container = Container([
+            Definition(
+                "example.C",
+                "tests.resources.class_c.C",
+                Argument.no_kw_argument("extra_argument")
+            ),
+            self.definition_b,
+            self.definition_c
+        ])
+
+        with self.assertRaisesRegex(
+            exceptions.ServiceInstantiationFailed,
+            "Type tests.resources.class_a.A cannot be instantiated by the container"
+        ):
+            container.get("example.C")
+
     def test_has(self):
         container = Container([
             Definition("example", "example.fqn"),
