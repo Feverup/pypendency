@@ -88,7 +88,10 @@ class Container(AbstractContainer):
         if klass is None:
             raise exceptions.ServiceNotFoundFromFullyQualifiedName(fully_qualified_name)
 
-        return klass(*args, **kwargs)
+        try:
+            return klass(*args, **kwargs)
+        except TypeError as e:
+            raise exceptions.ServiceInstantiationFailed(fully_qualified_name) from e
 
     def has(self, identifier: str) -> bool:
         return identifier in self._service_mapping
