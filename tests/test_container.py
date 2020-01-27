@@ -99,7 +99,7 @@ class TestContainer(TestCase):
             ),
         ])
 
-        with self.assertRaises(
+        with self.assertRaisesRegex(
             exceptions.ServiceInstantiationFailed,
             "Type tests.resources.class_c.C cannot be instantiated by the container"
         ):
@@ -108,9 +108,9 @@ class TestContainer(TestCase):
     def test_get_with_more_parameters_than_expected(self):
         container = Container([
             Definition(
-                "example.C",
-                "tests.resources.class_c.C",
-                Argument.no_kw_argument("extra_argument")
+                "example.A",
+                "tests.resources.class_a.A",
+                [Argument("unexpected_argument", "test_param")],
             ),
             self.definition_b,
             self.definition_c
