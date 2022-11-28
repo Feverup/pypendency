@@ -51,13 +51,13 @@ class Container(AbstractContainer):
 
         return self._do_get(identifier)
 
-    def enable_test_mode(self):
+    def enable_test_mode(self) -> None:
         self._test_mode = True
 
-    def disable_test_mode(self):
+    def disable_test_mode(self) -> None:
         self._test_mode = False
 
-    def is_test_mode(self):
+    def is_test_mode(self) -> bool:
         return self._test_mode
 
     def _do_get(self, identifier: str) -> Optional[object]:
