@@ -21,6 +21,7 @@ class AbstractContainer(ABC):
 class Container(AbstractContainer):
     def __init__(self, definitions: List[Definition]):
         self._resolved = False
+        self._test_mode = False
         self._service_mapping: Dict[str, Union[None, object, Definition]] = {
             definition.identifier: definition
             for definition in definitions
@@ -36,10 +37,10 @@ class Container(AbstractContainer):
         return self._resolved
 
     def set(self, identifier: str, service: object) -> None:
-        if self.is_resolved():
+        if not self.is_test_mode() and self.is_resolved():
             raise exceptions.ForbiddenChangeOnResolvedContainer()
 
-        if self.has(identifier):
+        if not self.is_test_mode() and self.has(identifier):
             raise exceptions.ServiceAlreadyDefined(identifier)
 
         self._service_mapping.update({identifier: service})
@@ -49,6 +50,15 @@ class Container(AbstractContainer):
             self.resolve()
 
         return self._do_get(identifier)
+
+    def enable_test_mode(self):
+        self._test_mode = True
+
+    def disable_test_mode(self):
+        self._test_mode = False
+
+    def is_test_mode(self):
+        return self._test_mode
 
     def _do_get(self, identifier: str) -> Optional[object]:
         empty = object()

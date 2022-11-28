@@ -20,10 +20,10 @@ class ContainerBuilder(Container):
         return cls._instance
 
     def set_definition(self, definition: Definition) -> None:
-        if self.is_resolved():
+        if not self.is_test_mode() and self.is_resolved():
             raise exceptions.ForbiddenChangeOnResolvedContainer()
 
-        if self.has(definition.identifier):
+        if not self.is_test_mode() and self.has(definition.identifier):
             raise exceptions.ServiceAlreadyDefined(definition.identifier)
 
         self._service_mapping.update({
