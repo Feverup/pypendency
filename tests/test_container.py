@@ -44,6 +44,7 @@ class TestContainer(TestCase):
         self.container.resolve()
         with self.assertRaises(exceptions.ForbiddenChangeOnResolvedContainer):
             self.container.set("test_identifier1", None)
+
     def test_set_can_be_done_after_resolving_container_when_test_mode(self):
         self.container.resolve()
         self.container.enable_test_mode()
