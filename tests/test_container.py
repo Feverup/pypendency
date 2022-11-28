@@ -44,6 +44,13 @@ class TestContainer(TestCase):
         self.container.resolve()
         with self.assertRaises(exceptions.ForbiddenChangeOnResolvedContainer):
             self.container.set("test_identifier1", None)
+    def test_set_can_be_done_after_resolving_container_when_test_mode(self):
+        self.container.resolve()
+        self.container.enable_test_mode()
+        try:
+            self.container.set("test_identifier1", None)
+        except Exception as e:
+            self.fail("set should not raise an exception for a resolved container in test mode")
 
     def test_set_cant_be_done_twice_for_the_same_identifier(self):
         self.container.set("test_identifier1", None)
