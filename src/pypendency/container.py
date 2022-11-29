@@ -26,6 +26,7 @@ class Container(AbstractContainer):
             definition.identifier: definition
             for definition in definitions
         }
+        self.__service_mapping_checkpoint = None
 
     def resolve(self) -> None:
         if self.is_resolved():
@@ -52,9 +53,12 @@ class Container(AbstractContainer):
         return self._do_get(identifier)
 
     def enable_test_mode(self) -> None:
+        self.__service_mapping_checkpoint = self._service_mapping
         self._test_mode = True
 
     def disable_test_mode(self) -> None:
+        if self.__service_mapping_checkpoint:
+            self._service_mapping = self.__service_mapping_checkpoint
         self._test_mode = False
 
     def is_test_mode(self) -> bool:
@@ -82,7 +86,9 @@ class Container(AbstractContainer):
             kwargs.update({argument.key: value})
 
         instance = self.__instance_from_fqn(definition.fully_qualified_name, args, kwargs)
-        self._service_mapping.update({identifier: instance})
+
+        if self._test_mode is False:
+            self._service_mapping.update({identifier: instance})
 
         return instance
 
