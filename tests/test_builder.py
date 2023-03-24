@@ -28,6 +28,26 @@ class TestContainerBuilder(TestCase):
                 Argument("b", "@example.B"),
             ],
         )
+        self.definition_d = Definition(
+            "example.D",
+            "tests.resources.class_c.C",
+            [
+                Argument.no_kw_argument("@example.A"),
+                Argument("kw_arg", "test_param"),
+                Argument("b", "@example.B"),
+            ],
+            (
+                "test_tag_A",
+            ),
+        )
+        self.definition_e = Definition(
+            "example.E",
+            "tests.resources.class_a.A",
+            tags=(
+                "test_tag_A",
+                "test_tag_B",
+            ),
+        )
 
     def test_get_container_instance_retrieves_the_same_object(self):
         self.assertIs(
@@ -45,4 +65,6 @@ class TestContainerBuilder(TestCase):
         self.container_builder.set_definition(self.definition_b)
         self.container_builder.set_definition(self.definition_a)
         self.container_builder.set_definition(self.definition_c)
+        self.container_builder.set_definition(self.definition_d)
+        self.container_builder.set_definition(self.definition_e)
         self.assertIsInstance(self.container_builder.get("example.C"), C)

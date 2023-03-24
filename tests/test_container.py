@@ -31,6 +31,14 @@ class TestContainer(TestCase):
                 Argument("b", "@example.B"),
             ],
         )
+        self.definition_d = Definition(
+            "example.D",
+            "tests.resources.class_a.A",
+            tags=(
+                "test_tag_A",
+                "test_tag_B",
+            ),
+        )
 
     def test_is_resolved_is_false_on_instantiation(self):
         self.assertFalse(self.container.is_resolved())
@@ -71,6 +79,7 @@ class TestContainer(TestCase):
             self.definition_a,
             self.definition_c,
             self.definition_b,
+            self.definition_d,
         ])
 
         c = container.get("example.C")
@@ -121,6 +130,32 @@ class TestContainer(TestCase):
             "Type tests.resources.class_a.A cannot be instantiated by the container"
         ):
             container.get("example.C")
+
+    def test_get_by_tags_fails_when_identifier_is_not_found(self):
+        container = Container([
+            self.definition_d
+        ])
+
+        with self.assertRaises(exceptions.TagNotFoundInContainer):
+            container.get_by_tags(["test_tag_C"])
+
+    def test_get_by_tags(self):
+        container = Container([
+            self.definition_d,
+            Definition(
+                "example.E",
+                "tests.resources.class_a.A",
+                tags=(
+                    "test_tag_A",
+                ),
+            )
+        ])
+
+        tags = container.get_by_tags(["test_tag_A"])
+
+        self.assertIsInstance(tags[0], A)
+        self.assertIsInstance(tags[1], A)
+        self.assertEqual(2, len(tags))
 
     def test_has(self):
         container = Container([
