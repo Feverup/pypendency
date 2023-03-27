@@ -66,6 +66,14 @@ class TestContainer(TestCase):
             self.container.get("test_identifier1"),
         )
 
+    def test_set_sets_the_identifier_with_tags(self):
+        self.container.set("test_identifier1", sentinel.service, ("test_tag_A"))
+        self.assertIs(
+            sentinel.service,
+            self.container.get("test_identifier1"),
+        )
+        self.assertIs(sentinel.service, self.container.get_by_tags("test_tag_A").pop())
+
     def test_get_fails_when_identifier_is_not_found(self):
         container = Container([
             self.definition_b

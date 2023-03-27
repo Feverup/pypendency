@@ -70,11 +70,14 @@ class Container(AbstractContainer):
         if self.is_resolved() is False:
             self.resolve()
 
+        matching_tags = set()
         for tag in tags:
             if tag not in self._tags_mapping:
                 raise exceptions.TagNotFoundInContainer(tag)
+            for tagged_service in self._tags_mapping[tag]:
+                matching_tags.add(tagged_service)
 
-        return set(self._tags_mapping.get(tag).values for tag in tags)
+        return matching_tags
 
     def _do_get(self, identifier: str) -> Optional[object]:
         empty = object()
