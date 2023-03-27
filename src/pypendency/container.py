@@ -39,7 +39,7 @@ class Container(AbstractContainer):
         return self._resolved
 
     def __populate_tags_map(self) -> None:
-        for service in self._service_mapping:
+        for service in self._service_mapping.values():
             if not isinstance(service, Definition):
                 continue
             for tag in service.tags:
