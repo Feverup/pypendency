@@ -160,7 +160,7 @@ class TestContainer(TestCase):
             )
         ])
 
-        services = list(container.get_by_tag(Tag(identifier="test_tag_A", value=sentinel.test_tag_value)))
+        services = container.get_by_tag(Tag(identifier="test_tag_A", value=sentinel.test_tag_value))
 
         self.assertIsInstance(services[0], A)
         self.assertEqual(1, len(services))
