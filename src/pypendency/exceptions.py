@@ -42,6 +42,6 @@ class ServiceInstantiationFailed(Exception):
 
 
 class TagNotFoundInContainer(Exception):
-    def __init__(self, tag: Tag) -> None:
-        self.tag = tag
-        super().__init__(f"The tag '{tag}' does not exist in the container")
+    def __init__(self, tag_identifier: str) -> None:
+        self.tag_identifier = tag_identifier
+        super().__init__(f"The tag '{tag_identifier}' does not exist in the container")

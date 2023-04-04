@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from pydoc import locate
-from typing import Any, Dict, List, Optional, Union, Set
+from typing import Any, Dict, List, Optional, Union, Set, Tuple
 
 from pypendency import exceptions
 from pypendency.argument import Argument
@@ -26,7 +26,7 @@ class Container(AbstractContainer):
             definition.identifier: definition
             for definition in definitions
         }
-        self._tags_mapping: Dict[Tag, Set[object]] = {}
+        self._tags_mapping: Dict[Tag, Set[Union[object, Definition]]] = {}
 
     def resolve(self) -> None:
         if self.is_resolved():
@@ -46,7 +46,9 @@ class Container(AbstractContainer):
                 self.__add_service_to_tag_group(tag, service)
 
     def __add_service_to_tag_group(self, tag: Tag, service: object) -> None:
-        self._tags_mapping.setdefault(tag, set()).add(service)
+        if tag not in self._tags_mapping:
+            self._tags_mapping[tag] = set()
+        self._tags_mapping[tag].update(set([service]))
 
     def set(self, identifier: str, service: object, tags: Optional[Set[Tag]] = None) -> None:
         if self.is_resolved():
@@ -66,18 +68,28 @@ class Container(AbstractContainer):
 
         return self._do_get(identifier)
 
-    def get_by_tags(self, tags: List[Tag]) -> Set[object]:
+    def get_by_tag(self, tag: Tag) -> Set[object]:
         if self.is_resolved() is False:
             self.resolve()
 
-        matching_tags = set()
-        for tag in tags:
-            if tag not in self._tags_mapping:
-                raise exceptions.TagNotFoundInContainer(tag)
-            for tagged_service in self._tags_mapping[tag]:
-                matching_tags.add(tagged_service)
+        if tag not in self._tags_mapping:
+            raise exceptions.TagNotFoundInContainer(tag.identifier)
 
-        return matching_tags
+        return self._tags_mapping[tag]
+
+    def get_by_tag_name(self, tag_identifier: str, tag_value: Optional[object] = Tag.UNSET_VALUE) -> Set[object]:
+        if self.is_resolved() is False:
+            self.resolve()
+
+        services = set()
+        for tag in self._tags_mapping.keys():
+            if tag.identifier == tag_identifier and (tag_value == Tag.UNSET_VALUE or tag.value == tag_value):
+                services.update(self._tags_mapping[tag])
+
+        return services
+
+    def get_service_tags(self, service: object) -> Set[Tag]:
+        return (tag for tag in self._tags_mapping if service in tag)
 
     def _do_get(self, identifier: str) -> Optional[object]:
         empty = object()

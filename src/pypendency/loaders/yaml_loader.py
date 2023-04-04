@@ -36,7 +36,7 @@ class YamlLoader(Loader):
                 for arg_name, arg_value in definition_content.get('kwargs', {}).items()
             ]
 
-            tags = [Tag(tag) for tag in definition_content.get('tags', ())]
+            tags = [Tag(identifier=identifier, value=value) for identifier, value in definition_content.get('tags', {}).items()]
 
             self.__container.set_definition(
                 Definition(
