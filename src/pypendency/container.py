@@ -88,7 +88,10 @@ class Container(AbstractContainer):
         return services
 
     def get_service_tags(self, service_identifier: str) -> Set[Tag]:
-        return set([tag for tag in self._tags_mapping if service_identifier in tag])
+        if self.is_resolved() is False:
+            self.resolve()
+
+        return {tag for tag, services in self._tags_mapping.items() if service_identifier in services}
 
     def _do_get(self, identifier: str) -> Optional[object]:
         empty = object()

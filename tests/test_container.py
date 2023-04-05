@@ -187,6 +187,17 @@ class TestContainer(TestCase):
         self.assertIsInstance(services.pop(), A)
         self.assertIsInstance(services.pop(), A)
 
+    def test_get_service_tags(self):
+        container = Container([])
+        test_service = object()
+        test_tag = Tag(identifier="test_tag_A", value=sentinel.value)
+        container.set("test_service", test_service, {test_tag})
+
+        tags = container.get_service_tags("test_service")
+
+        self.assertEqual(1, len(tags))
+        self.assertEqual(list(tags)[0], test_tag)
+
     def test_has(self):
         container = Container([
             Definition("example", "example.fqn"),
