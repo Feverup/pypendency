@@ -140,13 +140,13 @@ class TestContainer(TestCase):
         ):
             container.get("example.C")
 
-    def test_get_by_tags_fails_when_identifier_is_not_found(self):
+    def test_get_by_tag_fails_when_tag_is_not_found(self):
         container = Container([
             self.definition_d
         ])
 
         with self.assertRaises(exceptions.TagNotFoundInContainer):
-            container.get_by_tags(["test_tag_C"])
+            container.get_by_tag(Tag(identifier="test_tag_C", value=sentinel.test_unexisting_tag_value))
 
     def test_get_by_tag(self):
         container = Container([
@@ -162,8 +162,8 @@ class TestContainer(TestCase):
 
         services = container.get_by_tag(Tag(identifier="test_tag_A", value=sentinel.test_tag_value))
 
-        self.assertIsInstance(services[0], A)
         self.assertEqual(1, len(services))
+        self.assertIsInstance(services.pop(), A)
 
     def test_get_by_tag_name(self):
         container = Container([

@@ -26,7 +26,7 @@ class Container(AbstractContainer):
             definition.identifier: definition
             for definition in definitions
         }
-        self._tags_mapping: Dict[Tag, List[Union[object, Definition]]] = {}
+        self._tags_mapping: Dict[Tag, List[str]] = {}
 
     def resolve(self) -> None:
         if self.is_resolved():
@@ -43,10 +43,10 @@ class Container(AbstractContainer):
             if not isinstance(service, Definition):
                 continue
             for tag in service.tags:
-                self.__add_service_to_tag_group(tag, service)
+                self.__add_service_to_tag_group(tag, service.identifier)
 
-    def __add_service_to_tag_group(self, tag: Tag, service: object) -> None:
-        self._tags_mapping.setdefault(tag, []).append(service)
+    def __add_service_to_tag_group(self, tag: Tag, service_identifier: str) -> None:
+        self._tags_mapping.setdefault(tag, set()).add(service_identifier)
 
     def set(self, identifier: str, service: object, tags: Optional[Set[Tag]] = None) -> None:
         if self.is_resolved():
@@ -58,7 +58,7 @@ class Container(AbstractContainer):
         self._service_mapping.update({identifier: service})
         if tags is not None:
             for tag in tags:
-                self.__add_service_to_tag_group(tag, service)
+                self.__add_service_to_tag_group(tag, identifier)
 
     def get(self, identifier: str) -> Optional[object]:
         if self.is_resolved() is False:
@@ -66,28 +66,29 @@ class Container(AbstractContainer):
 
         return self._do_get(identifier)
 
-    def get_by_tag(self, tag: Tag) -> List[object]:
+    def get_by_tag(self, tag: Tag) -> Set[object]:
         if self.is_resolved() is False:
             self.resolve()
 
         if tag not in self._tags_mapping:
             raise exceptions.TagNotFoundInContainer(tag.identifier)
 
-        return self._tags_mapping[tag]
+        return set([self._do_get(service) for service in self._tags_mapping[tag]])
 
-    def get_by_tag_name(self, tag_identifier: str, tag_value: Optional[object] = Tag.UNSET_VALUE) -> List[object]:
+    def get_by_tag_name(self, tag_identifier: str, tag_value: Optional[object] = Tag.UNSET_VALUE) -> Set[object]:
         if self.is_resolved() is False:
             self.resolve()
 
-        services = []
+        services = set()
         for tag, tagged_services in self._tags_mapping.keys():
             if tag.identifier == tag_identifier and (tag_value == Tag.UNSET_VALUE or tag.value == tag_value):
-                services.extend(tagged_services)
+                for tagged_service in tagged_services:
+                    services.update(self.do_get(tagged_service.identifier))
 
         return services
 
-    def get_service_tags(self, service: object) -> Set[Tag]:
-        return (tag for tag in self._tags_mapping if service in tag)
+    def get_service_tags(self, service_identifier: str) -> Set[Tag]:
+        return set([tag for tag in self._tags_mapping if service_identifier in tag])
 
     def _do_get(self, identifier: str) -> Optional[object]:
         empty = object()
