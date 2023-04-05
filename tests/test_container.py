@@ -35,10 +35,10 @@ class TestContainer(TestCase):
         self.definition_d = Definition(
             "example.D",
             "tests.resources.class_a.A",
-            tags=[
+            tags={
                 Tag(identifier="test_tag_A", value=sentinel.test_tag_A),
                 Tag(identifier="test_tag_B", value=sentinel.test_tag_B),
-            ],
+            },
         )
 
     def test_is_resolved_is_false_on_instantiation(self):
@@ -68,12 +68,16 @@ class TestContainer(TestCase):
         )
 
     def test_set_sets_the_identifier_with_tags(self):
-        self.container.set("test_identifier1", sentinel.service, {"test_tag_A": sentinel.tag_value})
+        self.container.set(
+            "test_identifier1",
+            sentinel.service,
+            {Tag(identifier="test_tag_A", value=sentinel.tag_value)}
+        )
         self.assertIs(
             sentinel.service,
             self.container.get("test_identifier1"),
         )
-        self.assertIs(sentinel.service, self.container.get_by_tag_value("test_tag_A", sentinel.tag_value).pop())
+        self.assertIs(sentinel.service, self.container.get_by_tag_name("test_tag_A", sentinel.tag_value).pop())
 
     def test_get_fails_when_identifier_is_not_found(self):
         container = Container([
@@ -154,9 +158,9 @@ class TestContainer(TestCase):
             Definition(
                 "example.E",
                 "tests.resources.class_a.A",
-                tags=[
+                tags={
                     Tag(identifier="test_tag_A", value=sentinel.test_tag_value),
-                ],
+                },
             )
         ])
 
@@ -171,16 +175,17 @@ class TestContainer(TestCase):
             Definition(
                 "example.E",
                 "tests.resources.class_a.A",
-                tags=[
+                tags={
                     Tag(identifier="test_tag_A", value=sentinel.test_tag_value),
-                ],
+                },
             )
         ])
 
-        services = list(container.get_by_tag_name("test_tag_A"))
+        services = container.get_by_tag_name("test_tag_A")
 
-        self.assertIsInstance(services[0], A)
-        self.assertEqual(1, len(services))
+        self.assertEqual(2, len(services))
+        self.assertIsInstance(services.pop(), A)
+        self.assertIsInstance(services.pop(), A)
 
     def test_has(self):
         container = Container([

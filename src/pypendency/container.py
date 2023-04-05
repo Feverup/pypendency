@@ -80,10 +80,10 @@ class Container(AbstractContainer):
             self.resolve()
 
         services = set()
-        for tag, tagged_services in self._tags_mapping.keys():
+        for tag, tagged_services in self._tags_mapping.items():
             if tag.identifier == tag_identifier and (tag_value == Tag.UNSET_VALUE or tag.value == tag_value):
                 for tagged_service in tagged_services:
-                    services.update(self.do_get(tagged_service.identifier))
+                    services.add(self._do_get(tagged_service))
 
         return services
 
