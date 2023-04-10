@@ -13,3 +13,9 @@ example.C:
   kwargs:
     kw_arg: 'test_param'
     b: '@example.B'
+
+example.tagged_A:
+  fqn: 'tests.resources.class_a.A'
+  tags:
+    test_tag_identifier: 'test_tag_value'
+    another_test_tag_identifier: 'another_test_tag_value'
