@@ -1,5 +1,5 @@
 # Pypendency
-Pypendency is a dependency injection library for python 3.6+.
+Pypendency is a dependency injection library for python >=3.7.
 
 ## Installation
 ```bash
