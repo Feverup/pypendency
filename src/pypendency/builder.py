@@ -1,8 +1,8 @@
 from typing import Optional, List
 
 from pypendency import exceptions
-from pypendency.definition import Definition
 from pypendency.container import Container
+from pypendency.definition import Definition
 
 
 class ContainerBuilder(Container):

@@ -6,6 +6,7 @@ from pypendency.builder import ContainerBuilder
 from pypendency.exceptions import ServiceNotFoundInContainer
 from pypendency.loaders import exceptions
 from pypendency.loaders.yaml_loader import YamlLoader
+from pypendency.tag import Tag
 from tests.resources.class_a import A
 from tests.resources.class_c import C
 
@@ -41,6 +42,13 @@ class TestYamlLoader(TestCase):
         self.assertIsInstance(
             self._container_builder.get("example.C"),
             C
+        )
+        self.assertEqual(
+            self._container_builder.get_service_tags("example.tagged_A"),
+            {
+                Tag(identifier="test_tag_identifier", value="test_tag_value"),
+                Tag(identifier="another_test_tag_identifier", value="another_test_tag_value"),
+            },
         )
 
     def test_load_dir(self):
