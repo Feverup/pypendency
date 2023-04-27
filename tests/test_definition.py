@@ -1,5 +1,5 @@
-from unittest import TestCase
 from dataclasses import FrozenInstanceError
+from unittest import TestCase
 
 from pypendency.argument import Argument
 from pypendency.definition import Definition

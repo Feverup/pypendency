@@ -6,11 +6,11 @@ with open('README.md', 'r') as readme:
 
 setup(
     name='pypendency',
-    version='0.1.0',
+    version='0.3.0',
     packages=find_packages('src'),
     package_dir={'': 'src'},
-    author='Marcos Hernandez Juarez',
-    author_email='marcos.hernandezjuarez@gmail.com',
+    author='Fever - Platform Squad',
+    author_email='platform@feverup.com',
     description='A dependency injection tool for python',
     long_description=README,
     long_description_content_type='text/markdown',
@@ -20,17 +20,15 @@ setup(
         'Intended Audience :: Developers',
         'License :: OSI Approved :: MIT License',
         'Operating System :: OS Independent',
-        'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.8',
         'Operating System :: OS Independent',
         'Topic :: Software Development :: Libraries',
         'Typing :: Typed',
     ],
-    python_requires='>=3.6',
+    python_requires='>=3.7',
     install_requires=[
         'pyyaml',
-        'dataclasses;python_version<"3.7.0"',
     ],
     include_package_data=True,
 )

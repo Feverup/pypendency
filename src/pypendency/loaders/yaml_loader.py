@@ -1,5 +1,4 @@
 import glob
-
 import yaml
 
 from pypendency.argument import Argument
@@ -7,6 +6,7 @@ from pypendency.builder import ContainerBuilder
 from pypendency.definition import Definition
 from pypendency.loaders import exceptions
 from pypendency.loaders.loader import Loader
+from pypendency.tag import Tag
 
 
 class YamlLoader(Loader):
@@ -36,11 +36,17 @@ class YamlLoader(Loader):
                 for arg_name, arg_value in definition_content.get('kwargs', {}).items()
             ]
 
+            tags = {
+                Tag(identifier=identifier, value=value)
+                for identifier, value in definition_content.get('tags', {}).items()
+            }
+
             self.__container.set_definition(
                 Definition(
                     identifier,
                     definition_content['fqn'],
                     arguments,
+                    tags,
                 )
             )
 

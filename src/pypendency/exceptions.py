@@ -1,3 +1,6 @@
+from pypendency.tag import Tag
+
+
 class ContainerAlreadyResolved(Exception):
     def __init__(self):
         super().__init__("Container already resolved can't be resolved again")
@@ -36,3 +39,9 @@ class ServiceInstantiationFailed(Exception):
     def __init__(self, service_fqn: str) -> None:
         self.service_fqn = service_fqn
         super().__init__(f"Type {service_fqn} cannot be instantiated by the container")
+
+
+class TagNotFoundInContainer(Exception):
+    def __init__(self, tag_identifier: str) -> None:
+        self.tag_identifier = tag_identifier
+        super().__init__(f"The tag '{tag_identifier}' does not exist in the container")
