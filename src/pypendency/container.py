@@ -1,12 +1,13 @@
 from abc import ABC, abstractmethod
 from pydoc import locate
-from typing import Any, Dict, List, Optional, Union, Set, Tuple, Callable
+from typing import Any, Dict, List, Optional, Union, Set, Callable
 
 from pypendency import exceptions
 from pypendency.argument import Argument
 from pypendency.definition import Definition
 from pypendency.tag import Tag
 
+ResolveCallable = Callable[[], None]
 
 class AbstractContainer(ABC):
     @abstractmethod
@@ -22,7 +23,7 @@ class AbstractContainer(ABC):
 class Container(AbstractContainer):
     def __init__(self, definitions: List[Definition]):
         self._resolved = False
-        self._resolved_callbacks: Set[Callable] = set()
+        self._on_resolved_callbacks: Set[ResolveCallable] = set()
         self._service_mapping: Dict[str, Union[None, object, Definition]] = {
             definition.identifier: definition
             for definition in definitions
@@ -38,12 +39,15 @@ class Container(AbstractContainer):
         self.__perform_on_resolved_callbacks()
 
 
-    def add_resolved_callback(self, func: Callable) -> None:
-        self._resolved_callbacks.add(func)
+    def add_on_resolved_callback(self, func: ResolveCallable) -> None:
+        self._on_resolved_callbacks.add(func)
 
-    def __perform_on_resolved_callbacks(self):
-        for callback in self._resolved_callbacks:
-            callback()
+    def __perform_on_resolved_callbacks(self) -> None:
+        for on_resolved_callback in self._on_resolved_callbacks:
+            try:
+                on_resolved_callback()
+            except Exception as e:
+                raise exceptions.PypendencyCallbackException() from e
 
     def is_resolved(self) -> bool:
         return self._resolved

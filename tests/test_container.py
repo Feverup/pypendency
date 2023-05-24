@@ -208,28 +208,28 @@ class TestContainer(TestCase):
     def test_add_resolved_callback(self):
         container = Container([])
         func_one = Mock()
-        container.add_resolved_callback(func_one)
-        self.assertEqual(1, len(container._resolved_callbacks))
+        container.add_on_resolved_callback(func_one)
+        self.assertEqual(1, len(container._on_resolved_callbacks))
 
-        container.add_resolved_callback(func_one)
-        self.assertEqual(1, len(container._resolved_callbacks))
+        container.add_on_resolved_callback(func_one)
+        self.assertEqual(1, len(container._on_resolved_callbacks))
         func_two = Mock()
         func_three = Mock()
-        container.add_resolved_callback(func_two)
-        container.add_resolved_callback(func_three)
+        container.add_on_resolved_callback(func_two)
+        container.add_on_resolved_callback(func_three)
 
-        self.assertEqual(3, len(container._resolved_callbacks))
+        self.assertEqual(3, len(container._on_resolved_callbacks))
 
-    def test__perform_on_resolved_callbacks(self):
+    def test_perform_on_resolved_callbacks(self):
         container = Container([])
 
         func_one = Mock()
         func_two = Mock()
         func_three = Mock()
 
-        container.add_resolved_callback(func_one)
-        container.add_resolved_callback(func_two)
-        container.add_resolved_callback(func_three)
+        container.add_on_resolved_callback(func_one)
+        container.add_on_resolved_callback(func_two)
+        container.add_on_resolved_callback(func_three)
 
         container.resolve()
 
@@ -237,5 +237,12 @@ class TestContainer(TestCase):
         func_two.assert_called_once()
         func_three.assert_called_once()
 
+    def test_perform_on_resolved_callbacks_exception(self):
+        container = Container([])
 
+        func_one = Mock()
+        func_one.side_effect = Exception()
+        container.add_on_resolved_callback(func_one)
 
+        with self.assertRaises(exceptions.PypendencyCallbackException):
+            container.resolve()
