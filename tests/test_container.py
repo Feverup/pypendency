@@ -252,7 +252,7 @@ class TestContainer(TestCase):
 
         def func_one() -> None:
             container.set("fqn", 1)
-        func_one.side_effect = Exception()
+
         container.add_on_resolved_callback(func_one)
 
         with self.assertRaises(exceptions.PypendencyCallbackException):
