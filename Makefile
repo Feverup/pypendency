@@ -1,2 +1,23 @@
+ifneq ($(docker),0)
+    DOCKER_CMD := docker build -t pypendency-image . && docker run --rm -v $(PWD):/app pypendency-image
+endif
+
 run-tests:
-	python -m unittest
+	$(DOCKER_CMD) python -m unittest
+
+pipenv-lock:
+	$(DOCKER_CMD) python -m pipenv lock
+
+format:
+	$(DOCKER_CMD) python -m  black --config=pyproject.toml src/ tests/
+
+flake8:
+	$(DOCKER_CMD) python -m flake8 --config=.flake8 src/ tests/
+
+mypy:
+	$(DOCKER_CMD) python -m mypy --config-file=pyproject.toml src/ tests/
+
+black:
+	$(DOCKER_CMD) python -m black --config=pyproject.toml --check src/ tests/
+
+lint: flake8 black mypy

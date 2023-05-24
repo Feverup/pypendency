@@ -14,10 +14,7 @@ from tests.resources.class_c import C
 class TestContainer(TestCase):
     def setUp(self) -> None:
         self.container = Container([])
-        self.definition_a = Definition(
-            "example.A",
-            "tests.resources.class_a.A"
-        )
+        self.definition_a = Definition("example.A", "tests.resources.class_a.A")
         self.definition_b = Definition(
             "example.B",
             "tests.resources.class_b.B",
@@ -69,9 +66,7 @@ class TestContainer(TestCase):
 
     def test_set_sets_the_identifier_with_tags(self):
         self.container.set(
-            "test_identifier1",
-            sentinel.service,
-            {Tag(identifier="test_tag_A", value=sentinel.tag_value)}
+            "test_identifier1", sentinel.service, {Tag(identifier="test_tag_A", value=sentinel.tag_value)}
         )
         self.assertIs(
             sentinel.service,
@@ -80,20 +75,20 @@ class TestContainer(TestCase):
         self.assertIs(sentinel.service, self.container.get_by_tag_name("test_tag_A", sentinel.tag_value).pop())
 
     def test_get_fails_when_identifier_is_not_found(self):
-        container = Container([
-            self.definition_b
-        ])
+        container = Container([self.definition_b])
 
         with self.assertRaises(exceptions.ServiceNotFoundInContainer):
             container.get("example.B")
 
     def test_get_service_from_definitions(self):
-        container = Container([
-            self.definition_a,
-            self.definition_c,
-            self.definition_b,
-            self.definition_d,
-        ])
+        container = Container(
+            [
+                self.definition_a,
+                self.definition_c,
+                self.definition_b,
+                self.definition_d,
+            ]
+        )
 
         c = container.get("example.C")
         self.assertIsInstance(c, C)
@@ -102,67 +97,67 @@ class TestContainer(TestCase):
         self.assertIsInstance(c.b, B)
 
     def test_get_with_invalid_fqn(self):
-        container = Container([
-            Definition(
-                "example.A",
-                "tests.resources.non_existing_path.class_a.A"
-            ),
-            self.definition_b,
-        ])
+        container = Container(
+            [
+                Definition("example.A", "tests.resources.non_existing_path.class_a.A"),
+                self.definition_b,
+            ]
+        )
 
         with self.assertRaises(exceptions.ServiceNotFoundFromFullyQualifiedName):
             container.get("example.B")
 
     def test_get_with_missing_parameters_for_instantiation(self):
-        container = Container([
-            Definition(
-                "example.C",
-                "tests.resources.class_c.C"
-            ),
-        ])
+        container = Container(
+            [
+                Definition("example.C", "tests.resources.class_c.C"),
+            ]
+        )
 
         with self.assertRaisesRegex(
             exceptions.ServiceInstantiationFailed,
-            "Type tests.resources.class_c.C cannot be instantiated by the container"
+            "Type tests.resources.class_c.C cannot be instantiated by the container",
         ):
             container.get("example.C")
 
     def test_get_with_more_parameters_than_expected(self):
-        container = Container([
-            Definition(
-                "example.A",
-                "tests.resources.class_a.A",
-                [Argument("unexpected_argument", "test_param")],
-            ),
-            self.definition_b,
-            self.definition_c
-        ])
+        container = Container(
+            [
+                Definition(
+                    "example.A",
+                    "tests.resources.class_a.A",
+                    [Argument("unexpected_argument", "test_param")],
+                ),
+                self.definition_b,
+                self.definition_c,
+            ]
+        )
 
         with self.assertRaisesRegex(
             exceptions.ServiceInstantiationFailed,
-            "Type tests.resources.class_a.A cannot be instantiated by the container"
+            "Type tests.resources.class_a.A cannot be instantiated by the container",
         ):
             container.get("example.C")
 
     def test_get_by_tag_fails_when_tag_is_not_found(self):
-        container = Container([
-            self.definition_d
-        ])
+        container = Container([self.definition_d])
 
         with self.assertRaises(exceptions.TagNotFoundInContainer):
             container.get_by_tag(Tag(identifier="test_tag_C", value=sentinel.test_unexisting_tag_value))
 
     def test_get_by_tag(self):
-        container = Container([
-            self.definition_d,
-            Definition(
-                "example.E",
-                "tests.resources.class_a.A",
-                tags={
-                    Tag(identifier="test_tag_A", value=sentinel.test_tag_value),
-                },
-            )
-        ])
+        container = Container(
+            [
+                self.definition_d,
+                Definition(
+                    "example.E",
+                    "tests.resources.class_a.A",
+                    tags={
+                        Tag(identifier="test_tag_A", value=sentinel.test_tag_value),
+                    },
+                ),
+            ]
+        )
 
         services = container.get_by_tag(Tag(identifier="test_tag_A", value=sentinel.test_tag_value))
 
@@ -170,16 +165,18 @@ class TestContainer(TestCase):
         self.assertIsInstance(services.pop(), A)
 
     def test_get_by_tag_name(self):
-        container = Container([
-            self.definition_d,
-            Definition(
-                "example.E",
-                "tests.resources.class_a.A",
-                tags={
-                    Tag(identifier="test_tag_A", value=sentinel.test_tag_value),
-                },
-            )
-        ])
+        container = Container(
+            [
+                self.definition_d,
+                Definition(
+                    "example.E",
+                    "tests.resources.class_a.A",
+                    tags={
+                        Tag(identifier="test_tag_A", value=sentinel.test_tag_value),
+                    },
+                ),
+            ]
+        )
 
         services = container.get_by_tag_name("test_tag_A")
 
@@ -199,9 +196,11 @@ class TestContainer(TestCase):
         self.assertEqual(list(tags)[0], test_tag)
 
     def test_has(self):
-        container = Container([
-            Definition("example", "example.fqn"),
-        ])
+        container = Container(
+            [
+                Definition("example", "example.fqn"),
+            ]
+        )
         self.assertTrue(container.has("example"))
         self.assertFalse(container.has("other_example"))
 

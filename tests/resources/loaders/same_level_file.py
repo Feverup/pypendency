@@ -3,6 +3,4 @@ from pypendency.definition import Definition
 
 
 def load(container_builder: ContainerBuilder):
-    container_builder.set_definition(
-        Definition('same_level_file', 'tests.resources.class_a.A')
-    )
+    container_builder.set_definition(Definition("same_level_file", "tests.resources.class_a.A"))

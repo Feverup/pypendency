@@ -1,12 +1,19 @@
-FROM python:3.7
+ARG PYTHON_VERSION=3.8.16
+FROM python:$PYTHON_VERSION
 
-ENV PYTHONPATH /usr/src/app/src
+ENV PYTHONPATH /app/src:/app/tests
+ENV PATH /root/.local/bin/:$PYENV_ROOT/bin/:$PATH
 
-WORKDIR /usr/src/app
+WORKDIR /app/
+COPY . /app/
 
-COPY Pipfile /usr/src/app/Pipfile
-COPY Pipfile.lock /usr/src/app/Pipfile.lock
-
+RUN apt-get update \
+      && apt-get install -y --no-install-recommends curl \
+      && rm -rf /var/lib/apt/lists/* \
+      && pip install --upgrade pip \
+      && adduser -u 1000 --gecos "" --disabled-password fever \
+      && chown -R fever:fever /app
 RUN pip install pipenv
+RUN pipenv install --dev --system --verbose
 
-RUN pipenv install --dev
+CMD ["python"]

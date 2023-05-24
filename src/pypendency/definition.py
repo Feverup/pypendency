@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field
-from typing import List, Dict, Set
+from typing import List, Set
 
 from pypendency.argument import Argument
 from pypendency.tag import Tag

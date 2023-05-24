@@ -39,10 +39,7 @@ class TestYamlLoader(TestCase):
     def test_load_works_as_expected(self):
         path = os.path.join(self.current_dir, "..", "resources", "test_di.yaml")
         self.loader.load(path)
-        self.assertIsInstance(
-            self._container_builder.get("example.C"),
-            C
-        )
+        self.assertIsInstance(self._container_builder.get("example.C"), C)
         self.assertEqual(
             self._container_builder.get_service_tags("example.tagged_A"),
             {

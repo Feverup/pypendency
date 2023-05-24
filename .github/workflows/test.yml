@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: [ '3.7', '3.8' ]
+        python-version: [ '3.8', '3.9' ]
     name: Pypendency tests on ${{ matrix.python-version }}
     steps:
       - uses: actions/checkout@master
@@ -20,6 +20,8 @@ jobs:
           python -m pip install --upgrade pip
           pip install pipenv
           pipenv install --dev
+      - name: Check code quality
+        run: make lint docker=0
       - name: Unittest
         env:
           PYTHONPATH: ${PYTHONPATH}:${PWD}:src/

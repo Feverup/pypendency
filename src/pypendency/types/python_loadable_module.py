@@ -4,4 +4,5 @@ from pypendency.builder import ContainerBuilder
 
 
 class PythonLoadableModuleType(ModuleType):
-    def load(self, container_builder: ContainerBuilder) -> None: pass
+    def load(self, container_builder: ContainerBuilder) -> None:
+        pass

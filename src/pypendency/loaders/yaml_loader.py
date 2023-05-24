@@ -26,38 +26,34 @@ class YamlLoader(Loader):
             raise exceptions.ParsingErrorOnResource(resource) from e
 
         for identifier, definition_content in resource_loaded.items():
-            arguments = [
-                Argument.no_kw_argument(arg)
-                for arg in definition_content.get('args', [])
-            ]
+            arguments = [Argument.no_kw_argument(arg) for arg in definition_content.get("args", [])]
 
             arguments += [
-                Argument(arg_name, arg_value)
-                for arg_name, arg_value in definition_content.get('kwargs', {}).items()
+                Argument(arg_name, arg_value) for arg_name, arg_value in definition_content.get("kwargs", {}).items()
             ]
 
             tags = {
                 Tag(identifier=identifier, value=value)
-                for identifier, value in definition_content.get('tags', {}).items()
+                for identifier, value in definition_content.get("tags", {}).items()
             }
 
             self.__container.set_definition(
                 Definition(
                     identifier,
-                    definition_content['fqn'],
+                    definition_content["fqn"],
                     arguments,
                     tags,
                 )
             )
 
     def __resource_loaded(self, resource: str) -> dict:
-        with open(resource, 'r') as stream:
+        with open(resource, "r") as stream:
             return yaml.safe_load(stream)
 
     def load_dir(self, directory: str) -> None:
         self._guard_path_is_absolute(directory)
-        files = glob.glob(f'{directory}/**/[!_]*.yml', recursive=True)
-        files.extend(glob.glob(f'{directory}/**/[!_]*.yaml', recursive=True))
+        files = glob.glob(f"{directory}/**/[!_]*.yml", recursive=True)
+        files.extend(glob.glob(f"{directory}/**/[!_]*.yaml", recursive=True))
 
         for file in files:
             self.__load_by_absolute_path(file)

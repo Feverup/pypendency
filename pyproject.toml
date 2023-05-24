@@ -1,0 +1,18 @@
+[tool.black]
+line-length = 120
+target_version = ['py38', 'py39']
+include = '\.pyi?$'
+exclude = '''
+    /(
+      | \.git
+      | \.mypy_cache
+      | \.tox
+      | \.venv
+    )/
+    '''
+
+[tool.mypy]
+ignore_missing_imports = true
+exclude = [
+    'yaml'
+]

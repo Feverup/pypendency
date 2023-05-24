@@ -26,9 +26,7 @@ class ContainerBuilder(Container):
         if self.has(definition.identifier):
             raise exceptions.ServiceAlreadyDefined(definition.identifier)
 
-        self._service_mapping.update({
-            definition.identifier: definition
-        })
+        self._service_mapping.update({definition.identifier: definition})
 
 
 container_builder = ContainerBuilder.get_container_instance()

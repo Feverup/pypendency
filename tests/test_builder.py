@@ -12,10 +12,7 @@ from tests.resources.class_c import C
 class TestContainerBuilder(TestCase):
     def setUp(self) -> None:
         self.container_builder = ContainerBuilder([])
-        self.definition_a = Definition(
-            "example.A",
-            "tests.resources.class_a.A"
-        )
+        self.definition_a = Definition("example.A", "tests.resources.class_a.A")
         self.definition_b = Definition(
             "example.B",
             "tests.resources.class_b.B",
@@ -52,10 +49,7 @@ class TestContainerBuilder(TestCase):
         )
 
     def test_get_container_instance_retrieves_the_same_object(self):
-        self.assertIs(
-            ContainerBuilder.get_container_instance(),
-            ContainerBuilder.get_container_instance()
-        )
+        self.assertIs(ContainerBuilder.get_container_instance(), ContainerBuilder.get_container_instance())
 
     def test_set_definition_fails_if_resolved(self):
         self.container_builder.resolve()

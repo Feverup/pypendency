@@ -11,13 +11,16 @@ from pypendency.tag import Tag
 
 class AbstractContainer(ABC):
     @abstractmethod
-    def set(self, identifier: str, service: object) -> None: pass
+    def set(self, identifier: str, service: object) -> None:
+        pass
 
     @abstractmethod
-    def get(self, identifier: str) -> Optional[object]: pass
+    def get(self, identifier: str) -> Optional[object]:
+        pass
 
     @abstractmethod
-    def has(self, identifier: str) -> bool: pass
+    def has(self, identifier: str) -> bool:
+        pass
 
 
 class Container(AbstractContainer):
@@ -25,8 +28,7 @@ class Container(AbstractContainer):
         self._resolved = False
         self._on_resolved_callbacks: Set[OnContainerResolvedCallable] = set()
         self._service_mapping: Dict[str, Union[None, object, Definition]] = {
-            definition.identifier: definition
-            for definition in definitions
+            definition.identifier: definition for definition in definitions
         }
         self._tags_mapping: Dict[Tag, List[str]] = {}
 
@@ -49,7 +51,7 @@ class Container(AbstractContainer):
                 self.__add_service_to_tag_group(tag, service.identifier)
 
     def __add_service_to_tag_group(self, tag: Tag, service_identifier: str) -> None:
-        self._tags_mapping.setdefault(tag, set()).add(service_identifier)
+        self._tags_mapping.setdefault(tag, list()).append(service_identifier)
 
     def __perform_on_resolved_callbacks(self) -> None:
         for on_resolved_callback in self._on_resolved_callbacks:
@@ -145,7 +147,7 @@ class Container(AbstractContainer):
             raise exceptions.ServiceNotFoundFromFullyQualifiedName(fully_qualified_name)
 
         try:
-            return klass(*args, **kwargs)
+            return klass(*args, **kwargs) # type: ignore
         except TypeError as e:
             raise exceptions.ServiceInstantiationFailed(fully_qualified_name) from e
 
