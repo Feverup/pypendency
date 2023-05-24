@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from pydoc import locate
-from typing import Any, Dict, List, Optional, Union, Set, Tuple
+from typing import Any, Dict, List, Optional, Union, Set, Tuple, Callable
 
 from pypendency import exceptions
 from pypendency.argument import Argument
@@ -22,6 +22,7 @@ class AbstractContainer(ABC):
 class Container(AbstractContainer):
     def __init__(self, definitions: List[Definition]):
         self._resolved = False
+        self._resolved_callbacks: Set[Callable] = set()
         self._service_mapping: Dict[str, Union[None, object, Definition]] = {
             definition.identifier: definition
             for definition in definitions
@@ -34,6 +35,15 @@ class Container(AbstractContainer):
 
         self.__populate_tags_map()
         self._resolved = True
+        self.__perform_on_resolved_callbacks()
+
+
+    def add_resolved_callback(self, func: Callable) -> None:
+        self._resolved_callbacks.add(func)
+
+    def __perform_on_resolved_callbacks(self):
+        for callback in self._resolved_callbacks:
+            callback()
 
     def is_resolved(self) -> bool:
         return self._resolved

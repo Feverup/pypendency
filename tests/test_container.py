@@ -1,5 +1,5 @@
 from unittest import TestCase
-from unittest.mock import sentinel
+from unittest.mock import sentinel, Mock
 
 from pypendency import exceptions
 from pypendency.argument import Argument
@@ -204,3 +204,38 @@ class TestContainer(TestCase):
         ])
         self.assertTrue(container.has("example"))
         self.assertFalse(container.has("other_example"))
+
+    def test_add_resolved_callback(self):
+        container = Container([])
+        func_one = Mock()
+        container.add_resolved_callback(func_one)
+        self.assertEqual(1, len(container._resolved_callbacks))
+
+        container.add_resolved_callback(func_one)
+        self.assertEqual(1, len(container._resolved_callbacks))
+        func_two = Mock()
+        func_three = Mock()
+        container.add_resolved_callback(func_two)
+        container.add_resolved_callback(func_three)
+
+        self.assertEqual(3, len(container._resolved_callbacks))
+
+    def test__perform_on_resolved_callbacks(self):
+        container = Container([])
+
+        func_one = Mock()
+        func_two = Mock()
+        func_three = Mock()
+
+        container.add_resolved_callback(func_one)
+        container.add_resolved_callback(func_two)
+        container.add_resolved_callback(func_three)
+
+        container.resolve()
+
+        func_one.assert_called_once()
+        func_two.assert_called_once()
+        func_three.assert_called_once()
+
+
+
