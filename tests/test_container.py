@@ -246,3 +246,14 @@ class TestContainer(TestCase):
 
         with self.assertRaises(exceptions.PypendencyCallbackException):
             container.resolve()
+
+    def test_set_dependency_on_resolved_callback(self):
+        container = Container([])
+
+        def func_one() -> None:
+            container.set("fqn", 1)
+        func_one.side_effect = Exception()
+        container.add_on_resolved_callback(func_one)
+
+        with self.assertRaises(exceptions.PypendencyCallbackException):
+            container.resolve()
