@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from pydoc import locate
-from typing import Any, Dict, List, Optional, Union, Set, Callable
+from typing import Any, Dict, List, Optional, Union, Set
 
 from pypendency import exceptions
 from pypendency.argument import Argument
