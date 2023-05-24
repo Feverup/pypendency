@@ -19,7 +19,7 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install pipenv
-          pipenv install --dev
+          pipenv install --dev --system
       - name: Check code quality
         run: make lint docker=0
       - name: Unittest

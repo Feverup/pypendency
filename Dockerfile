@@ -14,6 +14,6 @@ RUN apt-get update \
       && adduser -u 1000 --gecos "" --disabled-password fever \
       && chown -R fever:fever /app
 RUN pip install pipenv
-RUN pipenv install --dev --system --verbose
+RUN pipenv install --dev --system
 
 CMD ["python"]
