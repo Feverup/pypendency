@@ -38,16 +38,6 @@ class Container(AbstractContainer):
         self._resolved = True
         self.__perform_on_resolved_callbacks()
 
-    def add_on_resolved_callback(self, func: OnContainerResolvedCallable) -> None:
-        self._on_resolved_callbacks.add(func)
-
-    def __perform_on_resolved_callbacks(self) -> None:
-        for on_resolved_callback in self._on_resolved_callbacks:
-            try:
-                on_resolved_callback()
-            except Exception as e:
-                raise exceptions.PypendencyCallbackException() from e
-
     def is_resolved(self) -> bool:
         return self._resolved
 
@@ -60,6 +50,16 @@ class Container(AbstractContainer):
 
     def __add_service_to_tag_group(self, tag: Tag, service_identifier: str) -> None:
         self._tags_mapping.setdefault(tag, set()).add(service_identifier)
+
+    def __perform_on_resolved_callbacks(self) -> None:
+        for on_resolved_callback in self._on_resolved_callbacks:
+            try:
+                on_resolved_callback()
+            except Exception as e:
+                raise exceptions.PypendencyCallbackException() from e
+
+    def add_on_resolved_callback(self, func: OnContainerResolvedCallable) -> None:
+        self._on_resolved_callbacks.add(func)
 
     def set(self, identifier: str, service: object, tags: Optional[Set[Tag]] = None) -> None:
         if self.is_resolved():
