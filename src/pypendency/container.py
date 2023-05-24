@@ -147,7 +147,7 @@ class Container(AbstractContainer):
             raise exceptions.ServiceNotFoundFromFullyQualifiedName(fully_qualified_name)
 
         try:
-            return klass(*args, **kwargs) # type: ignore
+            return klass(*args, **kwargs)  # type: ignore
         except TypeError as e:
             raise exceptions.ServiceInstantiationFailed(fully_qualified_name) from e
 

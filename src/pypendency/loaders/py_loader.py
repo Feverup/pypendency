@@ -26,7 +26,7 @@ class PyLoader(Loader):
 
         module = module_from_spec(spec)
         spec.loader.exec_module(module)
-        self.__load_module(resource, module) # type: ignore
+        self.__load_module(resource, module)  # type: ignore
 
     def __load_module(self, resource: str, module: PythonLoadableModuleType) -> None:
         try:
@@ -40,7 +40,7 @@ class PyLoader(Loader):
         if package is None:
             raise exceptions.ResourceNotFound(resource)
 
-        self.__load_module(resource, package) # type: ignore
+        self.__load_module(resource, package)  # type: ignore
 
     def load_dir(self, directory: str) -> None:
         self._guard_path_is_absolute(directory)
