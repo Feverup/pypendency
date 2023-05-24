@@ -47,4 +47,4 @@ class TagNotFoundInContainer(Exception):
 
 class PypendencyCallbackException(Exception):
     def __init__(self) -> None:
-        super().__init__(f"Bad on_resolved_callback")
+        super().__init__(f"Exception on_resolved_callback")

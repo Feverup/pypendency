@@ -5,9 +5,9 @@ from typing import Any, Dict, List, Optional, Union, Set, Callable
 from pypendency import exceptions
 from pypendency.argument import Argument
 from pypendency.definition import Definition
+from pypendency.on_container_resolved_callable import OnContainerResolvedCallable
 from pypendency.tag import Tag
 
-ResolveCallable = Callable[[], None]
 
 class AbstractContainer(ABC):
     @abstractmethod
@@ -23,7 +23,7 @@ class AbstractContainer(ABC):
 class Container(AbstractContainer):
     def __init__(self, definitions: List[Definition]):
         self._resolved = False
-        self._on_resolved_callbacks: Set[ResolveCallable] = set()
+        self._on_resolved_callbacks: Set[OnContainerResolvedCallable] = set()
         self._service_mapping: Dict[str, Union[None, object, Definition]] = {
             definition.identifier: definition
             for definition in definitions
@@ -38,8 +38,7 @@ class Container(AbstractContainer):
         self._resolved = True
         self.__perform_on_resolved_callbacks()
 
-
-    def add_on_resolved_callback(self, func: ResolveCallable) -> None:
+    def add_on_resolved_callback(self, func: OnContainerResolvedCallable) -> None:
         self._on_resolved_callbacks.add(func)
 
     def __perform_on_resolved_callbacks(self) -> None:
