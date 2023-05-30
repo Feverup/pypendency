@@ -198,6 +198,31 @@ class TestContainer(TestCase):
         self.assertEqual(1, len(tags))
         self.assertEqual(list(tags)[0], test_tag)
 
+    def test_get_service_identifier_raises_when_registered_multiple_times(self):
+        container = Container([])
+        test_service = object()
+        container.set("test_service", test_service)
+        container.set("another_test_service", test_service)
+
+        with self.assertRaises(exceptions.ServiceIsRegisteredWithMultipleIdentifiers):
+            container.get_service_identifier(test_service)
+
+    def test_get_service_identifier_raises_when_service_not_registered(self):
+        container = Container([])
+        test_service = object()
+
+        with self.assertRaises(exceptions.ServiceNotFoundInContainer):
+            container.get_service_identifier(test_service)
+
+    def test_get_service_identifier(self):
+        container = Container([])
+        test_service = object()
+        container.set("test_service", test_service)
+
+        identifier = container.get_service_identifier(test_service)
+
+        self.assertEqual("test_service", identifier)
+
     def test_has(self):
         container = Container([
             Definition("example", "example.fqn"),

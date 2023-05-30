@@ -73,38 +73,14 @@ class Container(AbstractContainer):
             for tag in tags:
                 self.__add_service_to_tag_group(tag, identifier)
 
+    def has(self, identifier: str) -> bool:
+        return identifier in self._service_mapping
+
     def get(self, identifier: str) -> Optional[object]:
         if self.is_resolved() is False:
             self.resolve()
 
         return self._do_get(identifier)
-
-    def get_by_tag(self, tag: Tag) -> Set[object]:
-        if self.is_resolved() is False:
-            self.resolve()
-
-        if tag not in self._tags_mapping:
-            raise exceptions.TagNotFoundInContainer(tag.identifier)
-
-        return set([self._do_get(service) for service in self._tags_mapping[tag]])
-
-    def get_by_tag_name(self, tag_identifier: str, tag_value: Optional[object] = Tag.UNSET_VALUE) -> Set[object]:
-        if self.is_resolved() is False:
-            self.resolve()
-
-        services = set()
-        for tag, tagged_services in self._tags_mapping.items():
-            if tag.identifier == tag_identifier and (tag_value == Tag.UNSET_VALUE or tag.value == tag_value):
-                for tagged_service in tagged_services:
-                    services.add(self._do_get(tagged_service))
-
-        return services
-
-    def get_service_tags(self, service_identifier: str) -> Set[Tag]:
-        if self.is_resolved() is False:
-            self.resolve()
-
-        return {tag for tag, services in self._tags_mapping.items() if service_identifier in services}
 
     def _do_get(self, identifier: str) -> Optional[object]:
         empty = object()
@@ -149,5 +125,43 @@ class Container(AbstractContainer):
         except TypeError as e:
             raise exceptions.ServiceInstantiationFailed(fully_qualified_name) from e
 
-    def has(self, identifier: str) -> bool:
-        return identifier in self._service_mapping
+    def get_service_identifier(self, service: Union[object, Definition]) -> str:
+        if self.is_resolved() is False:
+            self.resolve()
+
+        matching_identifiers: Set[str] = {k for k, v in self._service_mapping.items() if v == service}
+
+        if len(matching_identifiers) == 0:
+            raise exceptions.ServiceNotFoundInContainer(service.__str__())
+
+        if len(matching_identifiers) > 1:
+            raise exceptions.ServiceIsRegisteredWithMultipleIdentifiers(service)
+
+        return matching_identifiers.pop()
+
+    def get_by_tag(self, tag: Tag) -> Set[object]:
+        if self.is_resolved() is False:
+            self.resolve()
+
+        if tag not in self._tags_mapping:
+            raise exceptions.TagNotFoundInContainer(tag.identifier)
+
+        return set([self._do_get(service) for service in self._tags_mapping[tag]])
+
+    def get_by_tag_name(self, tag_identifier: str, tag_value: Optional[object] = Tag.UNSET_VALUE) -> Set[object]:
+        if self.is_resolved() is False:
+            self.resolve()
+
+        services = set()
+        for tag, tagged_services in self._tags_mapping.items():
+            if tag.identifier == tag_identifier and (tag_value == Tag.UNSET_VALUE or tag.value == tag_value):
+                for tagged_service in tagged_services:
+                    services.add(self._do_get(tagged_service))
+
+        return services
+
+    def get_service_tags(self, service_identifier: str) -> Set[Tag]:
+        if self.is_resolved() is False:
+            self.resolve()
+
+        return {tag for tag, services in self._tags_mapping.items() if service_identifier in services}
