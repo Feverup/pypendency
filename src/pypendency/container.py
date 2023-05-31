@@ -125,20 +125,6 @@ class Container(AbstractContainer):
         except TypeError as e:
             raise exceptions.ServiceInstantiationFailed(fully_qualified_name) from e
 
-    def get_service_identifier(self, service: Union[object, Definition]) -> str:
-        if self.is_resolved() is False:
-            self.resolve()
-
-        matching_identifiers: Set[str] = {k for k, v in self._service_mapping.items() if v == service}
-
-        if len(matching_identifiers) == 0:
-            raise exceptions.ServiceNotFoundInContainer(service.__str__())
-
-        if len(matching_identifiers) > 1:
-            raise exceptions.ServiceIsRegisteredWithMultipleIdentifiers(service)
-
-        return matching_identifiers.pop()
-
     def get_by_tag(self, tag: Tag) -> Set[object]:
         if self.is_resolved() is False:
             self.resolve()
@@ -159,6 +145,31 @@ class Container(AbstractContainer):
                     services.add(self._do_get(tagged_service))
 
         return services
+
+    def get_services_identifiers_by_tag_name(self, tag_identifier: str,
+                                             tag_value: Optional[object] = Tag.UNSET_VALUE) -> Set[str]:
+        if self.is_resolved() is False:
+            self.resolve()
+
+        if tag_value != Tag.UNSET_VALUE:
+            return self._do_get_services_identifiers_by_tag(Tag(identifier=tag_identifier, value=tag_value))
+
+        identifiers: Set[str] = set()
+        for tag, tagged_services in self._tags_mapping.items():
+            if tag.identifier == tag_identifier:
+                for service in tagged_services:
+                    identifiers.add(service)
+
+        if len(identifiers) == 0:
+            raise exceptions.TagNotFoundInContainer(tag_identifier)
+
+        return identifiers
+
+    def _do_get_services_identifiers_by_tag(self, tag: Tag) -> Set[str]:
+        if tag not in self._tags_mapping:
+            raise exceptions.TagNotFoundInContainer(tag.identifier)
+
+        return set(self._tags_mapping[tag])
 
     def get_service_tags(self, service_identifier: str) -> Set[Tag]:
         if self.is_resolved() is False:

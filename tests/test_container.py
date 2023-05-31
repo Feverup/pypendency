@@ -198,31 +198,6 @@ class TestContainer(TestCase):
         self.assertEqual(1, len(tags))
         self.assertEqual(list(tags)[0], test_tag)
 
-    def test_get_service_identifier_raises_when_registered_multiple_times(self):
-        container = Container([])
-        test_service = object()
-        container.set("test_service", test_service)
-        container.set("another_test_service", test_service)
-
-        with self.assertRaises(exceptions.ServiceIsRegisteredWithMultipleIdentifiers):
-            container.get_service_identifier(test_service)
-
-    def test_get_service_identifier_raises_when_service_not_registered(self):
-        container = Container([])
-        test_service = object()
-
-        with self.assertRaises(exceptions.ServiceNotFoundInContainer):
-            container.get_service_identifier(test_service)
-
-    def test_get_service_identifier(self):
-        container = Container([])
-        test_service = object()
-        container.set("test_service", test_service)
-
-        identifier = container.get_service_identifier(test_service)
-
-        self.assertEqual("test_service", identifier)
-
     def test_has(self):
         container = Container([
             Definition("example", "example.fqn"),
@@ -282,3 +257,51 @@ class TestContainer(TestCase):
 
         with self.assertRaises(exceptions.PypendencyCallbackException):
             container.resolve()
+
+    def test_get_services_identifiers_by_tag_name(self):
+        container = Container([
+            self.definition_d,
+            Definition(
+                "example.E",
+                "tests.resources.class_a.A",
+                tags={
+                    Tag(identifier="test_tag_A", value=sentinel.test_tag_A),
+                },
+            )
+        ])
+
+        scenarios = [
+            {
+                "msg": "Without value",
+                "tag_identifier": "test_tag_A",
+                "tag_value": Tag.UNSET_VALUE,
+            },
+            {
+                "msg": "With value",
+                "tag_identifier": "test_tag_A",
+                "tag_value": sentinel.test_tag_A,
+            },
+        ]
+
+        for scenario in scenarios:
+            with self.subTest(msg=scenario["msg"]):
+                identifiers = container.get_services_identifiers_by_tag_name(
+                    scenario["tag_identifier"], scenario["tag_value"]
+                )
+
+                self.assertEqual({"example.D", "example.E"}, identifiers)
+
+    def test_get_services_identifiers_by_tag_name_raises_when_tag_doesnt_exist(self):
+        container = Container([
+            self.definition_d,
+            Definition(
+                "example.E",
+                "tests.resources.class_a.A",
+                tags={
+                    Tag(identifier="test_tag_A", value=sentinel.test_tag_A),
+                },
+            )
+        ])
+
+        with self.assertRaises(exceptions.TagNotFoundInContainer):
+            container.get_services_identifiers_by_tag_name("this_tag_shouldn't_exist", None)

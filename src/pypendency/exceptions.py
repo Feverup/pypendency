@@ -53,9 +53,3 @@ class TagNotFoundInContainer(Exception):
 class PypendencyCallbackException(Exception):
     def __init__(self) -> None:
         super().__init__(f"Exception on_resolved_callback")
-
-
-class ServiceIsRegisteredWithMultipleIdentifiers(Exception):
-    def __init__(self, service: Union[object, Definition]) -> None:
-        self.service = service
-        super().__init__(f"The service {service} is registered with multiple identifiers")
