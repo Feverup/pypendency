@@ -1,3 +1,6 @@
+from typing import Union
+
+from pypendency.definition import Definition
 from pypendency.tag import Tag
 
 
@@ -34,6 +37,7 @@ class ServiceNotFoundFromFullyQualifiedName(Exception):
             f"Container can't locate any class in {fully_qualified_name}"
         )
 
+
 class ServiceInstantiationFailed(Exception):
     def __init__(self, service_fqn: str) -> None:
         self.service_fqn = service_fqn
@@ -44,6 +48,7 @@ class TagNotFoundInContainer(Exception):
     def __init__(self, tag_identifier: str) -> None:
         self.tag_identifier = tag_identifier
         super().__init__(f"The tag '{tag_identifier}' does not exist in the container")
+
 
 class PypendencyCallbackException(Exception):
     def __init__(self) -> None:
