@@ -1,0 +1,9 @@
+version: "3.7"
+services:
+  pypendency:
+    container_name: "pypendency"
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - .:/app

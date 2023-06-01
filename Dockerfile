@@ -1,19 +1,22 @@
-ARG PYTHON_VERSION=3.8.16
-FROM python:$PYTHON_VERSION
+ARG PYTHON_VERSION=3.8.12
+FROM python:$PYTHON_VERSION-slim
 
 ENV PYTHONPATH /app/src:/app/tests
-ENV PATH /root/.local/bin/:$PYENV_ROOT/bin/:$PATH
+ENV PATH /root/.local/bin:$PATH
 
-WORKDIR /app/
-COPY . /app/
+WORKDIR /app
 
 RUN apt-get update \
       && apt-get install -y --no-install-recommends curl \
       && rm -rf /var/lib/apt/lists/* \
       && pip install --upgrade pip \
       && adduser -u 1000 --gecos "" --disabled-password fever \
-      && chown -R fever:fever /app
-RUN pip install pipenv
-RUN pipenv install --dev --system
+      && chown -R fever:fever /app \
+      && curl -sSL https://install.python-poetry.org | POETRY_VERSION=1.2.0 python - \
+      && poetry config virtualenvs.create false
 
-CMD ["python"]
+COPY . ./
+
+RUN poetry install --no-root
+
+ENTRYPOINT ["poetry", "run"]

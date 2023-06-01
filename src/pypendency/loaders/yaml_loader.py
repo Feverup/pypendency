@@ -10,7 +10,7 @@ from pypendency.tag import Tag
 
 
 class YamlLoader(Loader):
-    def __init__(self, container: ContainerBuilder):
+    def __init__(self, container: ContainerBuilder) ->None:
         self.__container = container
 
     def load(self, resource: str) -> None:

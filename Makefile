@@ -1,8 +1,8 @@
 ifneq ($(docker),0)
-    DOCKER_CMD := docker build -t pypendency-image . && docker run --rm -v $(PWD):/app pypendency-image
+    DOCKER_CMD := docker-compose run --rm pypendency
 endif
 
-run-tests:
+tests:
 	$(DOCKER_CMD) python -m unittest
 
 pipenv-lock:

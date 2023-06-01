@@ -24,4 +24,4 @@ jobs:
         env:
           PYTHONPATH: ${PYTHONPATH}:${PWD}:src/
         run: |
-          pipenv run make run-tests
+          pipenv run make tests
