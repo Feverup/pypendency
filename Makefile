@@ -5,9 +5,6 @@ endif
 tests:
 	$(DOCKER_CMD) python -m unittest
 
-pipenv-lock:
-	$(DOCKER_CMD) python -m pipenv lock
-
 format:
 	$(DOCKER_CMD) python -m  black --config=pyproject.toml src/ tests/
 

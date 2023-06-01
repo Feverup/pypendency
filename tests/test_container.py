@@ -258,16 +258,18 @@ class TestContainer(TestCase):
             container.resolve()
 
     def test_get_services_identifiers_by_tag_name(self):
-        container = Container([
-            self.definition_d,
-            Definition(
-                "example.E",
-                "tests.resources.class_a.A",
-                tags={
-                    Tag(identifier="test_tag_A", value=sentinel.test_tag_A),
-                },
-            )
-        ])
+        container = Container(
+            [
+                self.definition_d,
+                Definition(
+                    "example.E",
+                    "tests.resources.class_a.A",
+                    tags={
+                        Tag(identifier="test_tag_A", value=sentinel.test_tag_A),
+                    },
+                ),
+            ]
+        )
 
         scenarios = [
             {
@@ -291,16 +293,18 @@ class TestContainer(TestCase):
                 self.assertEqual({"example.D", "example.E"}, identifiers)
 
     def test_get_services_identifiers_by_tag_name_raises_when_tag_doesnt_exist(self):
-        container = Container([
-            self.definition_d,
-            Definition(
-                "example.E",
-                "tests.resources.class_a.A",
-                tags={
-                    Tag(identifier="test_tag_A", value=sentinel.test_tag_A),
-                },
-            )
-        ])
+        container = Container(
+            [
+                self.definition_d,
+                Definition(
+                    "example.E",
+                    "tests.resources.class_a.A",
+                    tags={
+                        Tag(identifier="test_tag_A", value=sentinel.test_tag_A),
+                    },
+                ),
+            ]
+        )
 
         with self.assertRaises(exceptions.TagNotFoundInContainer):
             container.get_services_identifiers_by_tag_name("this_tag_shouldn't_exist", None)

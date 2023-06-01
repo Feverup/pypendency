@@ -148,8 +148,9 @@ class Container(AbstractContainer):
 
         return services
 
-    def get_services_identifiers_by_tag_name(self, tag_identifier: str,
-                                             tag_value: Optional[object] = Tag.UNSET_VALUE) -> Set[str]:
+    def get_services_identifiers_by_tag_name(
+        self, tag_identifier: str, tag_value: Optional[object] = Tag.UNSET_VALUE
+    ) -> Set[str]:
         if self.is_resolved() is False:
             self.resolve()
 
