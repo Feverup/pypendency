@@ -1,2 +1,6 @@
 # CODEOWNERS Managed by Platform Squad via Terraform
 * @Feverup/platform
+
+# feverbot never actually edits this file, we're just preventing the repository
+# owners from having rights to modify it.
+CODEOWNERS @feverbot
