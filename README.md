@@ -73,18 +73,23 @@ def load(container_builder: ContainerBuilder):
 ```
 
 ## Running tests
-Build the docker image:
+
+### Build the docker image
+
 ```bash
 docker build . -t pypendency-dev
 ```
 
-The default settings build the test with Python 3.8. If you want to run the test suite against another Python version, pass the version in the `PYTHON_VERSION` build variable.
+The default settings build the image with Python 3.8. If you want to run the test suite against another Python version, pass the version in the `PYTHON_VERSION` build variable.
+
+For example:
 
 ```bash
 docker build . -t pypendency-dev --build-arg PYTHON_VERSION=3.10
 ```
 
-Run tests:
+### Run tests
+
 ```bash
 docker run -v $(pwd)/.:/usr/src/app pypendency-dev bash -c "pipenv run make run-tests"
 ```
