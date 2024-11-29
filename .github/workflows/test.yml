@@ -13,7 +13,7 @@ jobs:
       - uses: actions/checkout@master
       - name: Build Docker image
         run: |
-          docker build . -t pypendency-dev
+          docker build . -t pypendency-dev --build-var PYTHON_VERSION=${{ matrix.python-version }}
       - name: Unittest
         run: |
           docker run -v $(pwd)/.:/usr/src/app pypendency-dev bash -c "pipenv run make run-tests"
