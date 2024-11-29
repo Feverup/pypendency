@@ -1,6 +1,6 @@
 FROM python:3.8-slim
 
-ENV PYTHONPATH /usr/src/app/src
+ENV PYTHONPATH=/usr/src/app/src
 
 WORKDIR /usr/src/app
 
