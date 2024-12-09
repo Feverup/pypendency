@@ -11,17 +11,9 @@ jobs:
     name: Pypendency tests on ${{ matrix.python-version }}
     steps:
       - uses: actions/checkout@master
-      - name: Setup python
-        uses: actions/setup-python@v4
-        with:
-          python-version: ${{ matrix.python-version }}
-      - name: Install dependencies
+      - name: Build Docker image
         run: |
-          python -m pip install --upgrade pip
-          pip install pipenv
-          pipenv install --dev
+          docker build . -t pypendency-dev:python-${{ matrix.python-version }} --build-arg PYTHON_VERSION=${{ matrix.python-version }}
       - name: Unittest
-        env:
-          PYTHONPATH: ${PYTHONPATH}:${PWD}:src/
         run: |
-          pipenv run make run-tests
+          docker run -v $(pwd)/.:/usr/src/app pypendency-dev:python-${{ matrix.python-version }} bash -c "pipenv run make run-tests"
