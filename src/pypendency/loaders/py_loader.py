@@ -32,7 +32,9 @@ class PyLoader(Loader):
         try:
             module.load(self.__container_builder)
         except AttributeError as e:
-            raise exceptions.MissingLoaderMethod(resource) from e
+            if "has no attribute 'load'" in str(e):
+                raise exceptions.MissingLoaderMethod(resource) from e
+            raise e
 
     def load_by_module_name(self, resource: str) -> None:
         package = locate(resource)
