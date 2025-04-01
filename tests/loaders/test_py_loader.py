@@ -44,6 +44,10 @@ class TestPyLoader(TestCase):
         with self.assertRaises(exceptions.MissingLoaderMethod):
             self.loader.load_by_module_name("tests.resources.test_di_no_load_method")
 
+    def test_load_by_module_name_fails_for_module_with_generic_attribute_error(self):
+        with self.assertRaises(AttributeError):
+            self.loader.load_by_module_name("tests.resources.test_di_with_generic_attribute_error")
+
     def test_load_by_module_name_works_as_expected(self):
         self.loader.load_by_module_name("tests.resources.test_di")
         c = self._container_builder.get("example.C")

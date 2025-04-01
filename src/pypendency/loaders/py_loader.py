@@ -29,10 +29,10 @@ class PyLoader(Loader):
         self.__load_module(resource, module)
 
     def __load_module(self, resource: str, module: PythonLoadableModuleType) -> None:
-        try:
-            module.load(self.__container_builder)
-        except AttributeError as e:
-            raise exceptions.MissingLoaderMethod(resource) from e
+        if not hasattr(module, "load"):
+            raise exceptions.MissingLoaderMethod(resource)
+
+        module.load(self.__container_builder)
 
     def load_by_module_name(self, resource: str) -> None:
         package = locate(resource)
