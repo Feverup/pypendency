@@ -14,7 +14,7 @@ class AbstractContainer(ABC):
     def set(self, identifier: str, service: object) -> None: pass
 
     @abstractmethod
-    def get(self, identifier: str) -> Optional[object]: pass
+    def get(self, identifier: str) -> Any: pass
 
     @abstractmethod
     def has(self, identifier: str) -> bool: pass
@@ -76,13 +76,13 @@ class Container(AbstractContainer):
     def has(self, identifier: str) -> bool:
         return identifier in self._service_mapping
 
-    def get(self, identifier: str) -> Optional[object]:
+    def get(self, identifier: str) -> Any:
         if self.is_resolved() is False:
             self.resolve()
 
         return self._do_get(identifier)
 
-    def _do_get(self, identifier: str) -> Optional[object]:
+    def _do_get(self, identifier: str) -> Any:
         empty = object()
 
         service = self._service_mapping.get(identifier, empty)
