@@ -40,6 +40,14 @@ class TestContainer(TestCase):
                 Tag(identifier="test_tag_B", value=sentinel.test_tag_B),
             },
         )
+        self.definition_e = Definition(
+            "example.E",
+            "tests.resources.class_a.A",
+            tags={
+                Tag(identifier="test_tag_A", value=sentinel.test_tag_A_value),
+                Tag(identifier="test_tag_B", value=sentinel.test_tag_B_value),
+            },
+        )
 
     def test_is_resolved_is_false_on_instantiation(self):
         self.assertFalse(self.container.is_resolved())
@@ -305,3 +313,17 @@ class TestContainer(TestCase):
 
         with self.assertRaises(exceptions.TagNotFoundInContainer):
             container.get_services_identifiers_by_tag_name("this_tag_shouldn't_exist", None)
+
+    def test_set_definition_fails_if_resolved(self):
+        self.container.resolve()
+
+        with self.assertRaises(exceptions.ForbiddenChangeOnResolvedContainer):
+            self.container.set_definition(self.definition_a)
+
+    def test_set_definitions_sets_properly_so_services_can_be_retrieved(self):
+        self.container.set_definition(self.definition_b)
+        self.container.set_definition(self.definition_a)
+        self.container.set_definition(self.definition_c)
+        self.container.set_definition(self.definition_d)
+        self.container.set_definition(self.definition_e)
+        self.assertIsInstance(self.container.get("example.C"), C)
