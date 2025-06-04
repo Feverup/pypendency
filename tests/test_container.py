@@ -36,8 +36,8 @@ class TestContainer(TestCase):
             "example.D",
             "tests.resources.class_a.A",
             tags={
-                Tag(identifier="test_tag_A", value=sentinel.test_tag_A),
-                Tag(identifier="test_tag_B", value=sentinel.test_tag_B),
+                Tag(identifier="test_tag_A", value=sentinel.test_tag_A_value),
+                Tag(identifier="test_tag_B", value=sentinel.test_tag_B_value),
             },
         )
         self.definition_e = Definition(
@@ -277,7 +277,7 @@ class TestContainer(TestCase):
                 "example.E",
                 "tests.resources.class_a.A",
                 tags={
-                    Tag(identifier="test_tag_A", value=sentinel.test_tag_A),
+                    Tag(identifier="test_tag_A", value=sentinel.test_tag_A_value),
                 },
             )
         ])
@@ -291,7 +291,7 @@ class TestContainer(TestCase):
             {
                 "msg": "With value",
                 "tag_identifier": "test_tag_A",
-                "tag_value": sentinel.test_tag_A,
+                "tag_value": sentinel.test_tag_A_value,
             },
         ]
 
@@ -310,7 +310,7 @@ class TestContainer(TestCase):
                 "example.E",
                 "tests.resources.class_a.A",
                 tags={
-                    Tag(identifier="test_tag_A", value=sentinel.test_tag_A),
+                    Tag(identifier="test_tag_A", value=sentinel.test_tag_A_value),
                 },
             )
         ])
