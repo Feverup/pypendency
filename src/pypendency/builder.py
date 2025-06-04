@@ -1,6 +1,5 @@
 from typing import Optional, List
 
-from pypendency import exceptions
 from pypendency.container import Container
 from pypendency.definition import Definition
 
@@ -18,17 +17,6 @@ class ContainerBuilder(Container):
             cls._instance = cls([])
 
         return cls._instance
-
-    def set_definition(self, definition: Definition) -> None:
-        if self.is_resolved():
-            raise exceptions.ForbiddenChangeOnResolvedContainer()
-
-        if self.has(definition.identifier):
-            raise exceptions.ServiceAlreadyDefined(definition.identifier)
-
-        self._service_mapping.update({
-            definition.identifier: definition
-        })
 
 
 container_builder = ContainerBuilder.get_container_instance()
