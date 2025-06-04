@@ -28,7 +28,7 @@ class Container(AbstractContainer):
             definition.identifier: definition
             for definition in definitions
         }
-        self._tags_mapping: Dict[Tag, List[str]] = {}
+        self._tags_mapping: Dict[Tag, Set[str]] = {}
 
     def resolve(self) -> None:
         if self.is_resolved():
