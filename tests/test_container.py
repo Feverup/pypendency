@@ -42,10 +42,14 @@ class TestContainer(TestCase):
         )
         self.definition_e = Definition(
             "example.E",
-            "tests.resources.class_a.A",
-            tags={
+            "tests.resources.class_c.C",
+            [
+                Argument.no_kw_argument("@example.A"),
+                Argument("kw_arg", "test_param"),
+                Argument("b", "@example.B"),
+            ],
+            {
                 Tag(identifier="test_tag_A", value=sentinel.test_tag_A_value),
-                Tag(identifier="test_tag_B", value=sentinel.test_tag_B_value),
             },
         )
 
