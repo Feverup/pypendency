@@ -82,6 +82,17 @@ class Container(AbstractContainer):
 
         return self._do_get(identifier)
 
+    def set_definition(self, definition: Definition) -> None:
+        if self.is_resolved():
+            raise exceptions.ForbiddenChangeOnResolvedContainer()
+
+        if self.has(definition.identifier):
+            raise exceptions.ServiceAlreadyDefined(definition.identifier)
+
+        self._service_mapping.update({
+            definition.identifier: definition
+        })
+
     def _do_get(self, identifier: str) -> Optional[object]:
         empty = object()
 

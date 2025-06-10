@@ -36,8 +36,20 @@ class TestContainer(TestCase):
             "example.D",
             "tests.resources.class_a.A",
             tags={
-                Tag(identifier="test_tag_A", value=sentinel.test_tag_A),
-                Tag(identifier="test_tag_B", value=sentinel.test_tag_B),
+                Tag(identifier="test_tag_A", value=sentinel.test_tag_A_value),
+                Tag(identifier="test_tag_B", value=sentinel.test_tag_B_value),
+            },
+        )
+        self.definition_e = Definition(
+            "example.E",
+            "tests.resources.class_c.C",
+            [
+                Argument.no_kw_argument("@example.A"),
+                Argument("kw_arg", "test_param"),
+                Argument("b", "@example.B"),
+            ],
+            {
+                Tag(identifier="test_tag_A", value=sentinel.test_tag_A_value),
             },
         )
 
@@ -265,7 +277,7 @@ class TestContainer(TestCase):
                 "example.E",
                 "tests.resources.class_a.A",
                 tags={
-                    Tag(identifier="test_tag_A", value=sentinel.test_tag_A),
+                    Tag(identifier="test_tag_A", value=sentinel.test_tag_A_value),
                 },
             )
         ])
@@ -279,7 +291,7 @@ class TestContainer(TestCase):
             {
                 "msg": "With value",
                 "tag_identifier": "test_tag_A",
-                "tag_value": sentinel.test_tag_A,
+                "tag_value": sentinel.test_tag_A_value,
             },
         ]
 
@@ -298,10 +310,24 @@ class TestContainer(TestCase):
                 "example.E",
                 "tests.resources.class_a.A",
                 tags={
-                    Tag(identifier="test_tag_A", value=sentinel.test_tag_A),
+                    Tag(identifier="test_tag_A", value=sentinel.test_tag_A_value),
                 },
             )
         ])
 
         with self.assertRaises(exceptions.TagNotFoundInContainer):
             container.get_services_identifiers_by_tag_name("this_tag_shouldn't_exist", None)
+
+    def test_set_definition_fails_if_resolved(self):
+        self.container.resolve()
+
+        with self.assertRaises(exceptions.ForbiddenChangeOnResolvedContainer):
+            self.container.set_definition(self.definition_a)
+
+    def test_set_definitions_sets_properly_so_services_can_be_retrieved(self):
+        self.container.set_definition(self.definition_b)
+        self.container.set_definition(self.definition_a)
+        self.container.set_definition(self.definition_c)
+        self.container.set_definition(self.definition_d)
+        self.container.set_definition(self.definition_e)
+        self.assertIsInstance(self.container.get("example.C"), C)
