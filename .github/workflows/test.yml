@@ -7,10 +7,10 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: [ '3.8', '3.9', '3.10' ]
+        python-version: [ '3.8', '3.9', '3.10', '3.11', '3.12' ]
     name: Pypendency tests on ${{ matrix.python-version }}
     steps:
-      - uses: actions/checkout@master
+      - uses: actions/checkout@v4
       - name: Build Docker image
         run: |
           docker build . -t pypendency-dev:python-${{ matrix.python-version }} --build-arg PYTHON_VERSION=${{ matrix.python-version }}
