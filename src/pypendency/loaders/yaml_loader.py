@@ -52,6 +52,8 @@ class YamlLoader(Loader):
 
     def __resource_loaded(self, resource: str) -> dict:
         with open(resource, 'r') as stream:
+            if yaml.__with_libyaml__:
+                return yaml.load(stream, Loader=yaml.CSafeLoader)
             return yaml.safe_load(stream)
 
     def load_dir(self, directory: str) -> None:
