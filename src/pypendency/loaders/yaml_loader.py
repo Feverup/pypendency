@@ -12,6 +12,7 @@ from pypendency.tag import Tag
 class YamlLoader(Loader):
     def __init__(self, container: ContainerBuilder):
         self.__container = container
+        self.__yaml_loader = yaml.CSafeLoader if yaml.__with_libyaml__ else yaml.SafeLoader
 
     def load(self, resource: str) -> None:
         self._guard_path_is_absolute(resource)
@@ -52,7 +53,7 @@ class YamlLoader(Loader):
 
     def __resource_loaded(self, resource: str) -> dict:
         with open(resource, 'r') as stream:
-            return yaml.safe_load(stream)
+            return yaml.load(stream, Loader=self.__yaml_loader)
 
     def load_dir(self, directory: str) -> None:
         self._guard_path_is_absolute(directory)

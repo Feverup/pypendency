@@ -6,7 +6,7 @@ with open('README.md', 'r') as readme:
 
 setup(
     name='pypendency',
-    version='0.6.1',
+    version='0.6.2',
     packages=find_packages('src'),
     package_dir={'': 'src'},
     author='Fever',
